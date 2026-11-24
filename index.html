@@ -1,0 +1,2825 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FASLA — Learn Smarter. Speak Better.</title>
+<meta name="description" content="FASLA is a professional English learning platform. Structured programs from A1 to C1, grammar and speaking mastery, a free placement test and a seven-question English challenge.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,500&family=Inter:wght@300;400;500;600;700&family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>
+/* Language is read BEFORE first paint so the saved choice is never overwritten. */
+(function () {
+  try {
+    var saved = localStorage.getItem('fasla_lang');
+    var lang = (saved === 'ar' || saved === 'en') ? saved : 'en';
+    window.__FASLA_LANG__ = lang;
+    var html = document.documentElement;
+    html.lang = lang;
+    html.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  } catch (e) {
+    window.__FASLA_LANG__ = 'en';
+  }
+})();
+</script>
+<style>
+/* ============================================================
+   FASLA — design system
+   Reference: university-press diploma dossier (navy buckram,
+   gold foil rules, cream paper). Structure is carried by
+   hairline rules and a numbered syllabus rail, not by shadows.
+   ============================================================ */
+:root{
+  --navy:#082B59;
+  --navy-deep:#06203F;
+  --blue:#1055A0;
+  --bright:#1769E8;
+  --gold:#B88B4A;
+  --beige:#D2AE75;
+  --yellow:#FFD43B;
+  --green:#16A765;
+  --ink:#101010;
+  --paper:#FFFFFF;
+  --paper-warm:#F7F4EE;
+  --line:rgba(8,43,89,.14);
+  --line-gold:rgba(184,139,74,.45);
+  --txt:#14213A;
+  --txt-soft:rgba(20,33,58,.72);
+  --display:'Plus Jakarta Sans',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --pad:clamp(20px,5vw,48px);
+}
+html[lang="ar"]{
+  --display:'Cairo','Plus Jakarta Sans',system-ui,sans-serif;
+  --body:'Cairo','Inter',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;}
+body{
+  margin:0;background:var(--paper);color:var(--txt);
+  font-family:var(--body);font-size:16px;line-height:1.72;
+  font-weight:400;overflow-x:hidden;
+}
+/* paper grain over the whole document */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:200;opacity:.035;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode:multiply;
+}
+img{max-width:100%;display:block;}
+a{color:inherit;text-decoration:none;}
+button{font:inherit;cursor:pointer;}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1.06;letter-spacing:-.025em;font-weight:800;}
+p{margin:0;}
+ul{margin:0;padding:0;list-style:none;}
+:focus-visible{outline:3px solid var(--yellow);outline-offset:3px;}
+
+/* ---------- layout primitives ---------- */
+.wrap{width:min(1260px,100% - (var(--pad) * 2));margin-inline:auto;}
+.section{padding-block:clamp(64px,9vw,132px);position:relative;}
+.rule{height:1px;background:var(--line-gold);border:0;margin:0;}
+.rule--light{background:rgba(255,255,255,.22);}
+.eyebrow{
+  font-family:var(--display);font-size:11px;font-weight:700;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:12px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--gold);flex:none;}
+.eyebrow--center{justify-content:center;}
+.h-sec{font-size:clamp(2.1rem,5.2vw,4.15rem);line-height:1.02;}
+.sub{font-size:clamp(1.02rem,1.6vw,1.28rem);color:var(--txt-soft);max-width:62ch;line-height:1.7;}
+.on-navy .sub,.navy .sub{color:rgba(255,255,255,.76);}
+.on-navy .eyebrow{color:var(--beige);}
+.on-navy .eyebrow::before{background:var(--beige);}
+.num{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1;}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:15px 30px;border:1px solid transparent;border-radius:2px;
+  font-family:var(--display);font-weight:700;font-size:.95rem;letter-spacing:.01em;
+  transition:transform .22s ease,background .22s ease,color .22s ease,box-shadow .22s ease;
+  min-height:52px;text-align:center;
+}
+.btn:hover{transform:translateY(-2px);}
+.btn:active{transform:translateY(0);}
+.btn-white{background:#fff;color:var(--navy);border-color:#fff;}
+.btn-white:hover{background:var(--paper-warm);box-shadow:0 12px 30px rgba(0,0,0,.22);}
+.btn-yellow{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+.btn-yellow:hover{background:#ffdf63;box-shadow:0 12px 30px rgba(255,212,59,.32);}
+.btn-navy{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-navy:hover{background:var(--blue);border-color:var(--blue);}
+.btn-ghost{background:transparent;color:var(--navy);border-color:rgba(8,43,89,.28);}
+.btn-ghost:hover{background:var(--navy);color:#fff;border-color:var(--navy);}
+.btn-ghost-light{background:transparent;color:#fff;border-color:rgba(255,255,255,.42);}
+.btn-ghost-light:hover{background:#fff;color:var(--navy);}
+.btn-block{width:100%;}
+.btn-sm{padding:11px 20px;min-height:44px;font-size:.85rem;}
+
+/* ---------- language switcher (persistent, no navbar) ---------- */
+.langbar{
+  position:fixed;top:16px;inset-inline-end:16px;z-index:120;
+  display:flex;align-items:center;gap:2px;padding:5px;
+  background:rgba(8,43,89,.92);border:1px solid var(--line-gold);border-radius:2px;
+  backdrop-filter:blur(8px);box-shadow:0 10px 30px rgba(6,32,63,.24);
+}
+.langbar button{
+  border:0;background:transparent;color:rgba(255,255,255,.66);
+  font-family:var(--display);font-size:11px;font-weight:700;letter-spacing:.16em;
+  padding:7px 12px;border-radius:1px;transition:.2s;
+}
+.langbar button:hover{color:#fff;}
+.langbar button.is-on{background:var(--yellow);color:var(--ink);}
+.langbar .sep{color:rgba(255,255,255,.3);font-size:11px;}
+
+/* ---------- syllabus rail (the "no navbar" wayfinding) ---------- */
+.rail{
+  position:fixed;inset-inline-start:22px;top:50%;transform:translateY(-50%);
+  z-index:110;display:none;flex-direction:column;gap:16px;
+}
+@media (min-width:1320px){.rail{display:flex;}}
+.rail::before{
+  content:"";position:absolute;inset-inline-start:9px;top:6px;bottom:6px;width:1px;
+  background:linear-gradient(to bottom,transparent,var(--line-gold) 12%,var(--line-gold) 88%,transparent);
+}
+.rail a{
+  display:flex;align-items:center;gap:12px;font-family:var(--display);
+  font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  color:rgba(8,43,89,.42);position:relative;padding-inline-start:22px;transition:.25s;
+}
+.rail a::before{
+  content:"";position:absolute;inset-inline-start:5px;top:50%;transform:translateY(-50%);
+  width:9px;height:9px;border-radius:50%;background:#fff;border:1px solid var(--line-gold);transition:.25s;
+}
+.rail a span{opacity:0;transform:translateX(-6px);transition:.25s;}
+html[dir="rtl"] .rail a span{transform:translateX(6px);}
+.rail a:hover span,.rail a.is-on span{opacity:1;transform:translateX(0);}
+.rail a.is-on{color:var(--navy);}
+.rail a.is-on::before{background:var(--gold);border-color:var(--gold);box-shadow:0 0 0 4px rgba(184,139,74,.18);}
+.rail.is-light a{color:rgba(255,255,255,.5);}
+.rail.is-light a::before{background:transparent;border-color:rgba(255,255,255,.4);}
+.rail.is-light a.is-on{color:#fff;}
+.rail.is-light a.is-on::before{background:var(--yellow);border-color:var(--yellow);}
+
+/* ============================================================
+   01 — HERO (deep navy cover, absolutely no header / navbar)
+   ============================================================ */
+.hero{
+  background:var(--navy);color:#fff;position:relative;overflow:hidden;
+  padding-block:clamp(14px,2.4vw,26px) clamp(40px,6vw,72px);
+  min-height:auto;display:flex;flex-direction:column;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(120% 80% at 50% -10%,rgba(23,105,232,.22),transparent 62%),
+    repeating-linear-gradient(180deg,rgba(255,255,255,.028) 0 1px,transparent 1px 4px);
+  pointer-events:none;
+}
+.hero > *{position:relative;z-index:1;}
+.hero-top{display:flex;flex-direction:column;align-items:center;gap:18px;}
+.logo{width:clamp(220px,32vw,340px);position:relative;}
+.logo svg{width:100%;height:auto;display:block;filter:drop-shadow(0 12px 30px rgba(6,32,63,.35));}
+.logo img{display:none;width:100%;height:auto;}
+.logo.has-img img{display:block;mix-blend-mode:screen;}
+.logo.has-img svg{display:none;}
+.hero-foil{
+  width:min(1180px,100%);margin:clamp(26px,4vw,48px) auto 0;display:flex;align-items:center;gap:18px;
+  color:var(--beige);font-family:var(--display);font-size:10px;font-weight:700;
+  letter-spacing:.28em;text-transform:uppercase;
+}
+.hero-foil::before,.hero-foil::after{content:"";flex:1;height:1px;background:rgba(184,139,74,.5);}
+.hero-core{
+  flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;padding-block:clamp(28px,5vw,52px);
+}
+.hero-h1{
+  font-size:clamp(2.62rem,8.2vw,6.6rem);line-height:.99;letter-spacing:-.035em;
+  max-width:16ch;position:relative;z-index:1;
+}
+.hero-h1 .light{font-weight:300;font-style:italic;letter-spacing:-.02em;}
+mark.hl{
+  background:none;color:inherit;position:relative;display:inline-block;padding-inline:.06em;
+}
+mark.hl::before{
+  content:"";position:absolute;inset-inline:-.02em;bottom:.1em;height:.34em;
+  background:var(--yellow);transform:skewY(-1.1deg) scaleX(0);transform-origin:left center;
+  z-index:-1;animation:hl .95s .5s cubic-bezier(.22,.9,.24,1) forwards;
+}
+html[dir="rtl"] mark.hl::before{transform-origin:right center;}
+@keyframes hl{to{transform:skewY(-1.1deg) scaleX(1);}}
+.hero-sub{margin-top:clamp(22px,3vw,32px);font-size:clamp(1.06rem,2vw,1.42rem);color:rgba(255,255,255,.8);max-width:44ch;line-height:1.62;}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin-top:clamp(28px,4vw,40px);}
+.hero-cta .btn{min-width:210px;}
+.hero-stats{
+  margin-top:clamp(38px,6vw,64px);display:grid;gap:0;
+  grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+  border-top:1px solid rgba(255,255,255,.16);
+}
+.hero-stats div{padding:22px 12px 6px;border-inline-end:1px solid rgba(255,255,255,.12);}
+.hero-stats div:last-child{border-inline-end:0;}
+.hero-stats b{display:block;font-family:var(--display);font-size:clamp(1.55rem,3.4vw,2.25rem);font-weight:800;letter-spacing:-.03em;}
+.hero-stats small{display:block;margin-top:4px;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--beige);font-weight:700;}
+
+/* ============================================================
+   02 — ABOUT (cream paper)
+   ============================================================ */
+.about{background:var(--paper);}
+.about-grid{display:grid;grid-template-columns:1fr;gap:clamp(34px,5vw,68px);align-items:center;}
+@media (min-width:960px){.about-grid{grid-template-columns:1.05fr .95fr;}}
+.plate{position:relative;}
+.plate img{
+  width:100%;aspect-ratio:4/3.2;object-fit:cover;filter:saturate(.82) contrast(1.03);
+  border:1px solid var(--line-gold);
+}
+.plate::after{
+  content:"";position:absolute;inset-inline-start:-18px;top:-18px;width:62%;height:58%;
+  border:1px solid var(--gold);z-index:-1;
+}
+.plate .tag{
+  position:absolute;inset-inline-end:-14px;bottom:26px;background:var(--navy);color:#fff;
+  padding:16px 22px;max-width:230px;border-inline-start:3px solid var(--yellow);
+}
+.plate .tag b{font-family:var(--display);font-size:1.55rem;display:block;letter-spacing:-.02em;}
+.plate .tag span{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--beige);font-weight:700;}
+.about-copy p{margin-top:20px;color:var(--txt-soft);font-size:1.045rem;}
+.about-copy p strong{color:var(--navy);font-weight:600;}
+.features{margin-top:clamp(30px,4vw,42px);border-top:1px solid var(--line);}
+.features li{
+  display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:start;
+  padding:20px 0;border-bottom:1px solid var(--line);
+}
+.features .idx{font-family:var(--display);font-size:.82rem;font-weight:800;color:var(--gold);letter-spacing:.14em;padding-top:5px;}
+.features h4{font-size:1.12rem;font-weight:700;letter-spacing:-.015em;}
+.features p{margin-top:5px;color:var(--txt-soft);font-size:.955rem;}
+
+/* ============================================================
+   03 — COURSES (navy cover cloth)
+   ============================================================ */
+.courses{background:var(--navy);color:#fff;}
+.courses::before{
+  content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+  background:
+    repeating-linear-gradient(135deg,rgba(184,139,74,.075) 0 1px,transparent 1px 9px),
+    radial-gradient(90% 60% at 82% 0%,rgba(23,105,232,.18),transparent 60%);
+}
+.courses > *{position:relative;z-index:1;}
+.sec-head{display:grid;gap:20px;grid-template-columns:1fr;align-items:end;}
+@media (min-width:900px){.sec-head{grid-template-columns:1.25fr .75fr;}}
+.course-grid{
+  margin-top:clamp(38px,5vw,62px);
+  display:grid;gap:clamp(20px,2.4vw,28px);grid-template-columns:repeat(auto-fit,minmax(288px,1fr));
+  align-items:start;
+}
+@media (min-width:1024px){
+  .course-grid > *:nth-child(3n+2){transform:translateY(28px);}
+  .course-grid > *:nth-child(3n+3){transform:translateY(56px);}
+}
+.ccard{
+  background:#fff;color:var(--txt);border:1px solid rgba(255,255,255,.16);
+  border-top:4px solid var(--gold);padding:26px 24px 24px;position:relative;
+  display:flex;flex-direction:column;gap:16px;
+  transition:transform .35s ease,box-shadow .35s ease;
+}
+.ccard:hover{box-shadow:0 26px 60px rgba(2,15,32,.42);}
+.ribbon{
+  position:absolute;top:14px;inset-inline-end:-8px;background:var(--yellow);color:var(--ink);
+  font-family:var(--display);font-size:.72rem;font-weight:800;letter-spacing:.14em;
+  padding:7px 14px;transform:rotate(2deg);box-shadow:0 6px 18px rgba(255,212,59,.32);
+}
+.ribbon.ribbon--contact{background:var(--navy);color:#fff;box-shadow:none;}
+.ribbon.ribbon--sample{background:var(--beige);color:var(--ink);}
+.ccard .lvl{
+  font-family:var(--display);font-size:10px;font-weight:700;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--gold);
+}
+.ccard h3{font-size:1.52rem;letter-spacing:-.028em;line-height:1.1;}
+.ccard .desc{color:var(--txt-soft);font-size:.935rem;}
+.meta{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line);}
+.meta div{background:#fff;padding:11px 12px;}
+.meta span{display:block;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--txt-soft);font-weight:700;}
+.meta b{font-family:var(--display);font-size:1.12rem;font-weight:800;letter-spacing:-.02em;}
+.ledger{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:14px 0;display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;}
+.ledger .old{color:#8A8FA0;text-decoration:line-through;font-size:.98rem;}
+.ledger .new{font-family:var(--display);font-size:2.15rem;font-weight:800;letter-spacing:-.035em;color:var(--navy);}
+.ledger .cur{font-size:.82rem;font-weight:700;color:var(--txt-soft);letter-spacing:.12em;}
+.ledger .off-note{
+  margin-inline-start:auto;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;
+  font-weight:700;color:var(--ink);background:var(--yellow);padding:4px 9px;
+}
+.ledger .contact-price{font-family:var(--display);font-size:1.35rem;font-weight:800;color:var(--navy);letter-spacing:-.02em;}
+.outcomes li{position:relative;padding-inline-start:20px;font-size:.915rem;color:var(--txt-soft);margin-top:7px;}
+.outcomes li::before{
+  content:"";position:absolute;inset-inline-start:0;top:.62em;width:9px;height:1.5px;background:var(--gold);
+}
+.ccard .actions{margin-top:auto;display:grid;gap:9px;}
+.sample-note{font-size:.735rem;letter-spacing:.06em;color:#8A6A32;font-weight:600;}
+
+/* ============================================================
+   04 — CHALLENGE  /  05 — PLACEMENT
+   ============================================================ */
+.challenge{background:var(--navy-deep);color:#fff;}
+.challenge::before{
+  content:"";position:absolute;inset:0;opacity:.55;pointer-events:none;
+  background:radial-gradient(80% 60% at 15% 10%,rgba(23,105,232,.2),transparent 60%),
+             repeating-linear-gradient(90deg,rgba(255,255,255,.03) 0 1px,transparent 1px 7px);
+}
+.challenge > *{position:relative;z-index:1;}
+.placement{background:var(--green);color:#06203F;}
+.placement .eyebrow{color:#06203F;}
+.placement .eyebrow::before{background:#06203F;}
+.placement .sub{color:rgba(6,32,63,.82);}
+.pl-grid{display:grid;gap:clamp(28px,4vw,54px);grid-template-columns:1fr;align-items:center;}
+@media (min-width:960px){.pl-grid{grid-template-columns:1.08fr .92fr;}}
+.pl-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:clamp(26px,3.6vw,38px);}
+.pl-stats div{background:rgba(255,255,255,.94);border:1px solid rgba(6,32,63,.12);padding:18px 16px;}
+.pl-stats b{display:block;font-family:var(--display);font-size:1.68rem;font-weight:800;letter-spacing:-.03em;color:var(--navy);}
+.pl-stats span{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:rgba(6,32,63,.72);}
+.panel{background:#fff;color:var(--txt);border:1px solid var(--line);padding:clamp(22px,3vw,34px);}
+.panel--navy{background:var(--navy);color:#fff;border-color:rgba(255,255,255,.16);}
+.panel h3{font-size:1.35rem;letter-spacing:-.025em;}
+.levels{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.levels li{
+  border:1px solid var(--line-gold);color:var(--gold);font-family:var(--display);
+  font-size:.78rem;font-weight:700;letter-spacing:.12em;padding:7px 13px;
+}
+.panel--navy .levels li{border-color:rgba(255,255,255,.28);color:var(--beige);}
+
+/* ============================================================
+   08 — REVIEWS ticker
+   ============================================================ */
+.reviews{background:var(--paper-warm);overflow:hidden;}
+.marquee{
+  margin-top:clamp(32px,4vw,52px);display:flex;gap:20px;width:max-content;
+  animation:slide 62s linear infinite;
+}
+.marquee:hover{animation-play-state:paused;}
+@keyframes slide{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+html[dir="rtl"] .marquee{animation-name:slideRtl;}
+@keyframes slideRtl{from{transform:translateX(0);}to{transform:translateX(50%);}}
+.tcard{
+  width:340px;flex:none;background:#fff;border:1px solid var(--line);
+  border-top:3px solid var(--gold);padding:24px 22px;
+}
+.tcard .stars{color:var(--yellow);letter-spacing:3px;font-size:.95rem;text-shadow:0 0 1px rgba(0,0,0,.35);}
+.tcard p{margin-top:12px;font-size:.945rem;color:var(--txt-soft);line-height:1.72;}
+.tcard .who{display:flex;align-items:center;gap:12px;margin-top:18px;}
+.tcard .av{
+  width:44px;height:44px;flex:none;border-radius:50%;background:var(--navy);color:#fff;
+  display:grid;place-items:center;font-family:var(--display);font-weight:800;font-size:.95rem;
+}
+.tcard .who b{display:block;font-family:var(--display);font-size:.95rem;letter-spacing:-.01em;}
+.tcard .who span{font-size:.78rem;color:var(--txt-soft);}
+.sample-flag{
+  display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:var(--ink);
+  padding:8px 14px;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+
+/* ============================================================
+   09 — APP band
+   ============================================================ */
+.appband{background:var(--yellow);color:var(--ink);overflow:hidden;}
+.app-grid{display:grid;gap:clamp(30px,5vw,60px);grid-template-columns:1fr;align-items:center;}
+@media (min-width:900px){.app-grid{grid-template-columns:1fr .8fr;}}
+.phone{
+  width:268px;margin-inline:auto;background:#0B1220;border-radius:38px;padding:11px;
+  box-shadow:0 34px 70px rgba(16,16,16,.28);position:relative;
+}
+.phone .screen{background:var(--navy);border-radius:28px;overflow:hidden;}
+.phone .notch{width:92px;height:20px;background:#0B1220;border-radius:0 0 14px 14px;position:absolute;top:11px;left:50%;transform:translateX(-50%);}
+.phone .ph-top{padding:26px 18px 16px;color:#fff;}
+.phone .ph-top small{font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--beige);font-weight:700;}
+.phone .ph-top b{display:block;font-family:var(--display);font-size:1.18rem;letter-spacing:-.02em;margin-top:5px;}
+.ph-bar{height:6px;background:rgba(255,255,255,.16);margin-top:12px;}
+.ph-bar i{display:block;height:100%;width:62%;background:var(--yellow);}
+.ph-body{background:#fff;padding:16px 14px 22px;display:grid;gap:9px;}
+.ph-row{border:1px solid var(--line);padding:11px 12px;display:flex;align-items:center;gap:10px;}
+.ph-row .dot{width:26px;height:26px;flex:none;background:var(--paper-warm);border:1px solid var(--line-gold);display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--gold);font-family:var(--display);}
+.ph-row b{font-size:.76rem;font-family:var(--display);}
+.ph-row span{margin-inline-start:auto;font-size:.66rem;letter-spacing:.12em;color:var(--txt-soft);font-weight:700;}
+.store{
+  display:inline-flex;align-items:center;gap:11px;padding:14px 22px;border:1.5px solid var(--ink);
+  background:transparent;color:var(--ink);font-family:var(--display);font-weight:700;font-size:.92rem;
+  cursor:not-allowed;opacity:.72;
+}
+.store small{display:block;font-size:9px;letter-spacing:.2em;text-transform:uppercase;font-weight:700;opacity:.72;}
+.badge-soon{
+  display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--yellow);
+  padding:8px 15px;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+}
+.badge-soon .pulse{width:8px;height:8px;border-radius:50%;background:var(--yellow);animation:pulse 1.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.35;transform:scale(.7);}}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.foot{background:var(--ink);color:#fff;padding-block:clamp(56px,7vw,88px) 0;}
+.foot-grid{display:grid;gap:clamp(28px,4vw,44px);grid-template-columns:repeat(auto-fit,minmax(215px,1fr));}
+.foot h4{font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--beige);font-weight:700;}
+.foot ul{margin-top:18px;display:grid;gap:11px;}
+.foot a{color:rgba(255,255,255,.72);font-size:.925rem;transition:.2s;position:relative;}
+.foot a:hover{color:var(--yellow);}
+.foot .logo{width:180px;}
+.foot .tagline{margin-top:16px;font-family:var(--display);font-size:1.12rem;font-weight:700;letter-spacing:-.015em;}
+.foot .about-txt{margin-top:12px;color:rgba(255,255,255,.62);font-size:.925rem;max-width:34ch;}
+.socials{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.socials a{
+  width:44px;height:44px;border:1px solid rgba(255,255,255,.2);display:grid;place-items:center;
+  transition:.22s;
+}
+.socials a:hover{background:var(--yellow);border-color:var(--yellow);transform:translateY(-3px);}
+.socials a:hover svg{fill:var(--ink);}
+.socials svg{width:19px;height:19px;fill:#fff;transition:.22s;}
+.foot-legal{
+  margin-top:clamp(42px,6vw,68px);border-top:1px solid rgba(255,255,255,.14);
+  padding:24px 0 32px;display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-content:space-between;
+  color:rgba(255,255,255,.5);font-size:.855rem;
+}
+.foot-legal .links{display:flex;flex-wrap:wrap;gap:20px;}
+
+/* ============================================================
+   Inner pages (router views)
+   ============================================================ */
+.page-head{
+  background:var(--navy);color:#fff;padding-block:clamp(96px,12vw,150px) clamp(46px,6vw,78px);
+  position:relative;overflow:hidden;
+}
+.page-head::before{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(90% 70% at 80% 0%,rgba(23,105,232,.22),transparent 62%),
+             repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 5px);
+}
+.page-head > *{position:relative;z-index:1;}
+.crumb{font-family:var(--display);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--beige);font-weight:700;}
+.crumb a:hover{color:var(--yellow);}
+.prose{max-width:74ch;}
+.prose h2{font-size:clamp(1.65rem,3.2vw,2.35rem);margin-top:42px;}
+.prose h3{font-size:1.18rem;margin-top:28px;}
+.prose p{margin-top:14px;color:var(--txt-soft);}
+.prose ul{margin-top:14px;display:grid;gap:10px;}
+.prose li{position:relative;padding-inline-start:22px;color:var(--txt-soft);}
+.prose li::before{content:"";position:absolute;inset-inline-start:0;top:.66em;width:10px;height:1.5px;background:var(--gold);}
+.curric li{
+  display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center;
+  padding:16px 0;border-bottom:1px solid var(--line);
+}
+.curric .u{font-family:var(--display);font-size:.78rem;font-weight:800;color:var(--gold);letter-spacing:.14em;}
+.curric .n{font-family:var(--display);font-weight:600;font-size:1.02rem;}
+.curric .c{font-size:.85rem;color:var(--txt-soft);}
+.faq{border-top:1px solid var(--line);}
+.faq details{border-bottom:1px solid var(--line);padding:18px 0;}
+.faq summary{
+  cursor:pointer;font-family:var(--display);font-weight:700;font-size:1.055rem;
+  list-style:none;display:flex;gap:14px;align-items:flex-start;
+}
+.faq summary::-webkit-details-marker{display:none;}
+.faq summary::after{content:"+";margin-inline-start:auto;color:var(--gold);font-size:1.4rem;line-height:1;}
+.faq details[open] summary::after{content:"–";}
+.faq p{margin-top:12px;color:var(--txt-soft);}
+.pricebar{
+  position:sticky;bottom:0;background:#fff;border-top:1px solid var(--gold);
+  padding:16px 0;display:flex;flex-wrap:wrap;gap:14px;align-items:center;z-index:60;
+}
+.pricebar .p{display:flex;align-items:baseline;gap:10px;}
+.pricebar .p b{font-family:var(--display);font-size:1.85rem;letter-spacing:-.035em;}
+
+/* ---------- forms ---------- */
+.form-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));}
+.field{display:flex;flex-direction:column;gap:7px;}
+.field.full{grid-column:1/-1;}
+.field label{font-family:var(--display);font-size:.79rem;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--navy);}
+.field label .opt{color:var(--txt-soft);font-weight:500;letter-spacing:.06em;}
+.field input,.field select,.field textarea{
+  padding:13px 15px;border:1px solid rgba(8,43,89,.22);background:#fff;border-radius:2px;
+  font-family:var(--body);font-size:.965rem;color:var(--txt);width:100%;transition:.2s;
+}
+.field textarea{resize:vertical;min-height:112px;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--bright);outline:2px solid rgba(23,105,232,.18);}
+.field .hint{font-size:.775rem;color:var(--txt-soft);}
+.field.err input,.field.err select,.field.err textarea{border-color:#C62828;background:#FFF6F6;}
+.field .msg{font-size:.775rem;color:#C62828;font-weight:600;display:none;}
+.field.err .msg{display:block;}
+.formset{border:1px solid var(--line);padding:clamp(20px,3vw,32px);margin-top:22px;background:#fff;}
+.formset > h3{
+  font-size:.82rem;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+  display:flex;align-items:center;gap:12px;
+}
+.formset > h3::after{content:"";flex:1;height:1px;background:var(--line);}
+.check{display:flex;gap:12px;align-items:flex-start;margin-top:16px;}
+.check input{width:20px;height:20px;flex:none;margin-top:3px;accent-color:var(--navy);}
+.check label{font-size:.885rem;color:var(--txt-soft);}
+.check a{color:var(--bright);text-decoration:underline;}
+.review-table{width:100%;border-collapse:collapse;}
+.review-table td{padding:11px 0;border-bottom:1px solid var(--line);font-size:.945rem;vertical-align:top;}
+.review-table td:first-child{color:var(--txt-soft);width:38%;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:700;}
+.notice{
+  border-inline-start:3px solid var(--gold);background:var(--paper-warm);
+  padding:16px 18px;font-size:.925rem;color:var(--txt-soft);
+}
+.notice strong{color:var(--navy);}
+.done-wrap{text-align:center;padding-block:clamp(40px,7vw,80px);}
+.done-mark{
+  width:92px;height:92px;margin:0 auto 22px;border-radius:50%;background:var(--green);color:#fff;
+  display:grid;place-items:center;font-size:2.6rem;font-family:var(--display);font-weight:800;
+}
+
+/* ---------- tests / quiz engine ---------- */
+.quiz-shell{max-width:900px;margin-inline:auto;}
+.qbar{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;}
+.qtrack{height:7px;background:rgba(255,255,255,.16);margin-top:16px;overflow:hidden;}
+.qtrack i{display:block;height:100%;background:var(--yellow);width:0;transition:width .35s ease;}
+.qtrack--light{background:rgba(8,43,89,.12);}
+.timer{
+  font-family:var(--display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em;
+  padding:8px 18px;border:1px solid var(--line-gold);color:var(--navy);background:#fff;
+}
+.timer.low{color:#C62828;border-color:#C62828;animation:blink 1s steps(2) infinite;}
+@keyframes blink{50%{opacity:.45;}}
+.qcard{background:#fff;color:var(--txt);border:1px solid var(--line);padding:clamp(22px,3.4vw,38px);}
+.qtype{font-family:var(--display);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:700;}
+.qcard h3{font-size:clamp(1.32rem,2.9vw,1.92rem);letter-spacing:-.028em;margin-top:12px;line-height:1.24;}
+.opts{margin-top:24px;display:grid;gap:11px;}
+.opt{
+  display:flex;gap:13px;align-items:flex-start;padding:15px 17px;border:1px solid rgba(8,43,89,.18);
+  background:#fff;text-align:start;transition:.18s;font-size:.985rem;line-height:1.6;
+}
+.opt:hover{border-color:var(--navy);background:var(--paper-warm);}
+.opt .k{
+  width:28px;height:28px;flex:none;border:1px solid var(--line-gold);color:var(--gold);
+  display:grid;place-items:center;font-family:var(--display);font-size:.82rem;font-weight:800;
+}
+.opt.sel{border-color:var(--navy);background:var(--navy);color:#fff;}
+.opt.sel .k{background:var(--yellow);color:var(--ink);border-color:var(--yellow);}
+.opt.correct{border-color:var(--green);background:rgba(22,167,101,.1);}
+.opt.wrong{border-color:#C62828;background:rgba(198,40,40,.08);}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px;}
+.chip{
+  padding:11px 17px;border:1px solid rgba(8,43,89,.22);background:#fff;font-family:var(--display);
+  font-weight:600;font-size:.955rem;transition:.18s;
+}
+.chip:hover{border-color:var(--navy);}
+.chip.used{opacity:.32;pointer-events:none;}
+.chip.slot{border-style:dashed;background:var(--paper-warm);color:var(--txt-soft);}
+.answer-line{
+  margin-top:22px;min-height:58px;border:1px dashed rgba(8,43,89,.3);background:var(--paper-warm);
+  padding:13px 15px;display:flex;flex-wrap:wrap;gap:9px;align-items:center;
+}
+.match-row{display:grid;grid-template-columns:1fr;gap:10px;align-items:center;margin-top:12px;}
+@media (min-width:640px){.match-row{grid-template-columns:1fr 26px 1fr;}}
+.match-row .arrow{color:var(--gold);text-align:center;font-weight:700;}
+.qnav{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px;}
+.score-ring{
+  width:186px;height:186px;border-radius:50%;margin:0 auto;display:grid;place-items:center;
+  background:conic-gradient(var(--yellow) var(--pct,0%),rgba(8,43,89,.12) 0);position:relative;
+}
+.score-ring::before{content:"";position:absolute;inset:13px;border-radius:50%;background:#fff;}
+.score-ring .val{position:relative;text-align:center;}
+.score-ring .val b{display:block;font-family:var(--display);font-size:2.65rem;letter-spacing:-.045em;line-height:1;}
+.score-ring .val span{font-size:.76rem;letter-spacing:.2em;text-transform:uppercase;color:var(--txt-soft);font-weight:700;}
+.res-grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+.res-cell{border:1px solid var(--line);padding:20px;background:#fff;}
+.res-cell span{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--txt-soft);font-weight:700;}
+.res-cell b{display:block;font-family:var(--display);font-size:1.72rem;letter-spacing:-.032em;margin-top:8px;}
+.bar{height:9px;background:rgba(8,43,89,.1);margin-top:11px;overflow:hidden;}
+.bar i{display:block;height:100%;background:var(--navy);}
+.wrong-item{border:1px solid var(--line);border-inline-start:3px solid #C62828;padding:18px 20px;background:#fff;}
+.wrong-item.ok{border-inline-start-color:var(--green);}
+.wrong-item h4{font-size:1.02rem;letter-spacing:-.015em;line-height:1.45;}
+.wrong-item .row{margin-top:9px;font-size:.925rem;}
+.wrong-item .row b{font-family:var(--display);}
+.wrong-item .sol{margin-top:11px;background:var(--paper-warm);padding:13px 15px;font-size:.915rem;color:var(--txt-soft);}
+.tagchip{
+  display:inline-block;font-size:.685rem;letter-spacing:.16em;text-transform:uppercase;font-weight:700;
+  padding:4px 10px;border:1px solid var(--line-gold);color:var(--gold);margin-inline-end:7px;
+}
+.stack{display:grid;gap:14px;}
+
+/* ---------- reveal on scroll ---------- */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .58s ease,transform .58s cubic-bezier(.22,.8,.24,1);}
+.rv.in{opacity:1;transform:none;}
+
+/* ---------- responsive ---------- */
+@media (max-width:640px){
+  .hero-h1{font-size:clamp(2.25rem,10.4vw,3.1rem);}
+  .hero-cta{flex-direction:column;align-items:stretch;}
+  .hero-cta .btn{width:100%;}
+  .hero-stats div{border-inline-end:0;border-bottom:1px solid rgba(255,255,255,.12);}
+  .tcard{width:280px;}
+  .plate .tag{position:static;margin-top:14px;max-width:none;}
+  .foot-legal{flex-direction:column;align-items:flex-start;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important;}
+  .rv{opacity:1;transform:none;}
+  mark.hl::before{transform:skewY(-1.1deg) scaleX(1);}
+}
+[hidden]{display:none !important;}
+</style>
+</head>
+<body>
+
+<!-- persistent language switcher — no navbar anywhere -->
+<div class="langbar" role="group" aria-label="Language / اللغة">
+  <button type="button" data-lang="en">EN</button>
+  <span class="sep">|</span>
+  <button type="button" data-lang="ar">AR</button>
+</div>
+
+<!-- syllabus rail: wayfinding without a header -->
+<nav class="rail" id="rail" aria-label="Section index">
+  <a href="#hero"><span data-i18n="rail.1">Hero</span></a>
+  <a href="#about"><span data-i18n="rail.2">About</span></a>
+  <a href="#courses"><span data-i18n="rail.3">Courses</span></a>
+  <a href="#challenge"><span data-i18n="rail.4">Challenge</span></a>
+  <a href="#placement"><span data-i18n="rail.5">Free Test</span></a>
+  <a href="#reviews"><span data-i18n="rail.6">Reviews</span></a>
+  <a href="#app"><span data-i18n="rail.7">App</span></a>
+  <a href="#contact"><span data-i18n="rail.8">Contact</span></a>
+</nav>
+
+<main id="home">
+
+  <!-- ============ 01 HERO ============ -->
+  <section class="hero" id="hero">
+    <div class="wrap hero-top">
+      <div class="logo" id="logoHero">
+        <svg viewBox="0 0 480 140" role="img" aria-label="Fasla">
+          <title>Fasla</title>
+          <text x="245" y="86" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="96" letter-spacing="10">Fasla</text>
+          <line x1="156" y1="118" x2="330" y2="118" stroke="#B88B4A" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <img src="assets/logo/fasla-logo.png" alt="FASLA" onload="this.parentElement.classList.add('has-img')">
+      </div>
+      <div class="hero-foil"><span data-i18n="hero.foil">Professional English Learning Platform · Est. Egypt</span></div>
+    </div>
+
+    <div class="wrap hero-core">
+      <h1 class="hero-h1">
+        <span class="light" data-i18n="hero.h1a">English Is Not Just a Language.</span>
+        <mark class="hl"><span data-i18n="hero.h1b">Your Next Chapter.</span></mark>
+      </h1>
+      <p class="hero-sub" data-i18n="hero.sub">Learn smarter. Speak confidently. Build your future with FASLA.</p>
+      <div class="hero-cta">
+        <a class="btn btn-white" href="#courses" data-i18n="hero.cta1">Explore Courses</a>
+        <a class="btn btn-yellow" href="#/register" data-i18n="hero.cta2">Join FASLA</a>
+      </div>
+      <div class="hero-stats">
+        <div><b class="num">7</b><small data-i18n="hero.s1">Learning Programs</small></div>
+        <div><b class="num">A1–C1</b><small data-i18n="hero.s2">Complete CEFR Path</small></div>
+        <div><b class="num">60</b><small data-i18n="hero.s3">Free Placement Questions</small></div>
+        <div><b class="num">50%</b><small data-i18n="hero.s4">Launch Discount</small></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 ABOUT ============ -->
+  <section class="section about" id="about">
+    <div class="wrap about-grid">
+      <div class="about-copy rv">
+        <div class="eyebrow"><span data-i18n="about.eyebrow">01 — About FASLA</span></div>
+        <h2 class="h-sec" style="margin-top:18px" data-i18n="about.title">Meet FASLA</h2>
+        <p data-i18n="about.p1">FASLA is a professional English learning platform dedicated to helping students master the English language through structured educational programs, modern teaching methodologies, and practical learning experiences.</p>
+        <p data-i18n="about.p2">Our programs are designed for every level, from complete beginners to advanced learners.</p>
+        <p data-i18n="about.p3">We focus on developing grammar, reading, writing, speaking, pronunciation, vocabulary, and real-life communication.</p>
+        <p data-i18n="about.p4">Our mission is to transform English learning into a clear, structured, and effective journey.</p>
+        <p><strong data-i18n="about.p5">At FASLA, we don't just teach English. We build confidence, communication, and opportunities.</strong></p>
+        <ul class="features">
+          <li>
+            <div class="idx">01</div>
+            <div>
+              <h4 data-i18n="about.f1t">Professional Learning Paths</h4>
+              <p data-i18n="about.f1d">Every level is mapped to clear units, lessons and outcomes — you always know exactly where you are and what comes next.</p>
+            </div>
+          </li>
+          <li>
+            <div class="idx">02</div>
+            <div>
+              <h4 data-i18n="about.f2t">Modern Teaching Methods</h4>
+              <p data-i18n="about.f2d">Blended practice, guided production and continuous feedback instead of memorising rules you never use.</p>
+            </div>
+          </li>
+          <li>
+            <div class="idx">03</div>
+            <div>
+              <h4 data-i18n="about.f3t">Practical English Skills</h4>
+              <p data-i18n="about.f3d">Grammar, reading, writing, speaking and pronunciation trained through real-life communication tasks.</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div class="plate rv">
+        <img src="https://images.pexels.com/photos/4778621/pexels-photo-4778621.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940" alt="Students studying English together">
+        <div class="tag">
+          <span data-i18n="about.tagk">Our promise</span>
+          <b data-i18n="about.tagv">Structured. Practical. Confident.</b>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 COURSES ============ -->
+  <section class="section courses on-navy" id="courses">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow"><span data-i18n="courses.eyebrow">02 — Programs</span></div>
+          <h2 class="h-sec" style="margin-top:18px" data-i18n="courses.title">Find Your Perfect Learning Path</h2>
+        </div>
+        <p class="sub" data-i18n="courses.sub">Choose your level and start building your English skills with FASLA.</p>
+      </div>
+      <div class="course-grid" id="homeCourses"></div>
+      <div style="margin-top:clamp(46px,6vw,86px);display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+        <a class="btn btn-yellow" href="#/courses" data-i18n="courses.ctaAll">View All Course Details</a>
+        <a class="btn btn-ghost-light" href="#/placement" data-i18n="courses.ctaTest">Not sure? Take the free placement test</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 CHALLENGE ============ -->
+  <section class="section challenge on-navy" id="challenge">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow"><span data-i18n="ch.eyebrow">03 — Seven Questions</span></div>
+          <h2 class="h-sec" style="margin-top:18px" data-i18n="ch.title">Challenge Your English</h2>
+        </div>
+        <p class="sub" data-i18n="ch.sub">Discover your strengths and weaknesses in just seven questions.</p>
+      </div>
+      <div class="panel panel--navy rv" style="margin-top:clamp(30px,4vw,48px);border-color:rgba(255,255,255,.16)">
+        <div style="display:grid;gap:26px;grid-template-columns:repeat(auto-fit,minmax(215px,1fr))">
+          <div>
+            <h3 style="color:#fff" data-i18n="ch.box1t">7 question types</h3>
+            <p class="sub" style="margin-top:10px;font-size:.985rem" data-i18n="ch.box1d">Multiple choice, fill in the blanks, arranging words, matching, error detection, scrambled letters and writing a sentence.</p>
+          </div>
+          <div>
+            <h3 style="color:#fff" data-i18n="ch.box2t">Instant analysis</h3>
+            <p class="sub" style="margin-top:10px;font-size:.985rem" data-i18n="ch.box2d">Score out of 7, percentage, grade, mistakes, correct answers, solutions and personalised recommendations.</p>
+          </div>
+          <div>
+            <h3 style="color:#fff" data-i18n="ch.box3t">Course guidance</h3>
+            <p class="sub" style="margin-top:10px;font-size:.985rem" data-i18n="ch.box3d">Your result maps directly to the FASLA program that fixes your weakest skill first.</p>
+          </div>
+        </div>
+        <div style="margin-top:28px;display:flex;flex-wrap:wrap;gap:12px">
+          <a class="btn btn-yellow" href="#/challenge" data-i18n="ch.cta">Start the Challenge</a>
+          <a class="btn btn-ghost-light" href="#/placement" data-i18n="ch.cta2">Take the 60-question test instead</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 PLACEMENT ============ -->
+  <section class="section placement" id="placement">
+    <div class="wrap pl-grid">
+      <div class="rv">
+        <div class="eyebrow"><span data-i18n="pl.eyebrow">04 — Free Assessment</span></div>
+        <h2 class="h-sec" style="margin-top:18px" data-i18n="pl.title">Discover Your True English Level – For FREE!</h2>
+        <p class="sub" style="margin-top:20px" data-i18n="pl.sub">Take our comprehensive English assessment and discover your level from A1 to C1.</p>
+        <div class="pl-stats">
+          <div><b class="num">60</b><span data-i18n="pl.st1">Questions</span></div>
+          <div><b class="num">A1–C1</b><span data-i18n="pl.st2">Levels Covered</span></div>
+          <div><b class="num" data-i18n="pl.st3v">Free</b><span data-i18n="pl.st3">Assessment</span></div>
+          <div><b class="num" data-i18n="pl.st4v">Yes</b><span data-i18n="pl.st4">Personalised Results</span></div>
+        </div>
+        <div style="margin-top:clamp(26px,3.6vw,38px);display:flex;flex-wrap:wrap;gap:13px">
+          <a class="btn btn-navy" href="#/placement" data-i18n="pl.cta">Start Your Free Test</a>
+          <a class="btn btn-ghost" style="border-color:rgba(6,32,63,.35);color:#06203F" href="#/placement-results" data-i18n="pl.cta2">View my saved result</a>
+        </div>
+      </div>
+      <div class="panel rv">
+        <h3 data-i18n="pl.cardt">What you get after the test</h3>
+        <ul class="stack" style="margin-top:18px">
+          <li class="notice"><strong data-i18n="pl.r1t">Your CEFR level (A1–C1)</strong><br><span data-i18n="pl.r1d">Calculated transparently from your real answers across five levels.</span></li>
+          <li class="notice"><strong data-i18n="pl.r2t">Strongest & weakest skills</strong><br><span data-i18n="pl.r2d">Grammar, vocabulary, reading, writing, listening and pronunciation.</span></li>
+          <li class="notice"><strong data-i18n="pl.r3t">Explanations for every mistake</strong><br><span data-i18n="pl.r3d">So you learn from the test instead of just seeing a score.</span></li>
+          <li class="notice"><strong data-i18n="pl.r4t">A recommended FASLA course</strong><br><span data-i18n="pl.r4d">With a full report you can send to FASLA on WhatsApp.</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 REVIEWS ============ -->
+  <section class="section reviews" id="reviews">
+    <div class="wrap">
+      <div class="sec-head">
+        <div>
+          <div class="eyebrow"><span data-i18n="rv.eyebrow">05 — Student Voices</span></div>
+          <h2 class="h-sec" style="margin-top:18px" data-i18n="rv.title">What Our Students Say</h2>
+        </div>
+        <div>
+          <p class="sub" data-i18n="rv.sub">Real stories from Egyptian university students who rebuilt their English with FASLA.</p>
+          <div class="sample-flag" style="margin-top:16px"><span data-i18n="rv.flag">Sample reviews — shown until genuine reviews are collected</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="marquee" id="ticker" aria-hidden="true"></div>
+  </section>
+
+  <!-- ============ 07 APP ============ -->
+  <section class="section appband" id="app">
+    <div class="wrap app-grid">
+      <div class="rv">
+        <div class="eyebrow" style="color:#101010"><span data-i18n="app.eyebrow">06 — Mobile Application</span></div>
+        <h2 class="h-sec" style="margin-top:18px" data-i18n="app.title">FASLA Is Coming to Your Pocket!</h2>
+        <p class="sub" style="color:rgba(16,16,16,.78);margin-top:18px" data-i18n="app.sub">Your English learning experience will soon be available wherever you go.</p>
+        <div style="margin-top:24px;display:flex;flex-wrap:wrap;gap:11px;align-items:center">
+          <span class="badge-soon"><span class="pulse"></span><span data-i18n="app.badge">Coming Soon</span></span>
+          <span class="store" role="img" aria-label="Google Play — coming soon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#101010"><path d="M3.6 2.3c-.3.3-.5.8-.5 1.4v16.6c0 .6.2 1.1.5 1.4l.1.1 9.3-9.3v-.2L3.6 2.3zM16.4 15l-3.1-3.1v-.2l3.1-3.1.1.1 3.7 2.1c1 .6 1 1.6 0 2.2L16.4 15zM15.5 15.9 12.3 12.7 3 22c.4.3 1 .4 1.6 0l10.9-6.1M15.5 8.1 4.6 2c-.6-.3-1.2-.3-1.6 0l9.3 9.3 3.2-3.2z"/></svg>
+            <span><small>Google Play</small><span data-i18n="app.soon">Coming Soon</span></span>
+          </span>
+          <span class="store" role="img" aria-label="App Store — coming soon">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="#101010"><path d="M16.4 12.7c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.9-1.4-.2-2.8.8-3.5.8-.7 0-1.9-.8-3.1-.8-1.6 0-3 .9-3.8 2.4-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3.9-1.3 1.3-2.6 1.3-2.7-.1 0-2.4-1-2.4-3.6zM14.2 5.5c.6-.8 1.1-1.9 1-3-.9 0-2.1.6-2.8 1.4-.6.7-1.2 1.8-1 2.9 1 .1 2.1-.5 2.8-1.3z"/></svg>
+            <span><small>App Store</small><span data-i18n="app.soon">Coming Soon</span></span>
+          </span>
+        </div>
+        <p style="margin-top:18px;font-size:.885rem;color:rgba(16,16,16,.7)" data-i18n="app.note">No download links are available yet — the app is still in development. We will publish official store links here the day it launches.</p>
+      </div>
+      <div class="rv">
+        <div class="phone">
+          <div class="notch"></div>
+          <div class="screen">
+            <div class="ph-top">
+              <small data-i18n="app.ph1">FASLA · Unit 06</small>
+              <b data-i18n="app.ph2">Daily Conversation</b>
+              <div class="ph-bar"><i></i></div>
+            </div>
+            <div class="ph-body">
+              <div class="ph-row"><span class="dot">01</span><b data-i18n="app.ph3">Warm-up vocabulary</b><span class="num">4′</span></div>
+              <div class="ph-row"><span class="dot">02</span><b data-i18n="app.ph4">Listen & repeat</b><span class="num">7′</span></div>
+              <div class="ph-row"><span class="dot">03</span><b data-i18n="app.ph5">Speak with FASLA</b><span class="num">9′</span></div>
+              <div class="ph-row"><span class="dot">04</span><b data-i18n="app.ph6">Grammar check</b><span class="num">5′</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- routed inner pages -->
+<main id="view" hidden></main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="foot" id="contact">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo" id="logoFoot">
+          <svg viewBox="0 0 480 140" role="img" aria-label="Fasla">
+            <title>Fasla</title>
+            <text x="245" y="86" text-anchor="middle" fill="#FFFFFF" font-family="'Plus Jakarta Sans',sans-serif" font-weight="800" font-size="96" letter-spacing="10">Fasla</text>
+            <line x1="156" y1="118" x2="330" y2="118" stroke="#B88B4A" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+          <img src="assets/logo/fasla-logo.png" alt="FASLA" onload="this.parentElement.classList.add('has-img')">
+        </div>
+        <p class="tagline" data-i18n="foot.tag">Learn Smarter. Speak Better.</p>
+        <p class="about-txt" data-i18n="foot.about">A professional English learning platform built on structure, practice and confidence — from complete beginner to advanced.</p>
+        <div class="socials">
+          <a href="https://www.instagram.com/fasla.english?dlrf=dG95N2VpOHdtb3h6" target="_blank" rel="noopener" aria-label="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4C8.4 2.2 8.8 2.2 12 2.2zm0 1.8c-3.1 0-3.5 0-4.7.1-1.1.1-1.7.2-2.1.4-.5.2-.9.4-1.2.8-.4.4-.6.7-.8 1.2-.2.4-.3 1-.4 2.1C2.7 9.7 2.7 10.1 2.7 12s0 2.3.1 3.5c.1 1.1.2 1.7.4 2.1.2.5.4.9.8 1.2.4.4.7.6 1.2.8.4.2 1 .3 2.1.4 1.2.1 1.6.1 4.7.1s3.5 0 4.7-.1c1.1-.1 1.7-.2 2.1-.4.5-.2.9-.4 1.2-.8.4-.4.6-.7.8-1.2.2-.4.3-1 .4-2.1.1-1.2.1-1.6.1-3.5s0-2.3-.1-3.5c-.1-1.1-.2-1.7-.4-2.1-.2-.5-.4-.9-.8-1.2-.4-.4-.7-.6-1.2-.8-.4-.2-1-.3-2.1-.4-1.2-.1-1.6-.1-4.7-.1zm0 3.1a4.9 4.9 0 1 1 0 9.8 4.9 4.9 0 0 1 0-9.8zm0 8.1a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4zm6.3-8.3a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0z"/></svg>
+          </a>
+          <a href="https://www.facebook.com/people/Fasla/61589018621127/?rdid=5gfIqxeJfKNyxtku&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F18fHtwKjMX%2F" target="_blank" rel="noopener" aria-label="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.7-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.8-1.6 1.6V12h2.7l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg>
+          </a>
+          <a href="https://www.tiktok.com/@fasla.english.eg" target="_blank" rel="noopener" aria-label="TikTok">
+            <svg viewBox="0 0 24 24"><path d="M16.6 3c.4 2.1 1.7 3.5 3.7 3.7v2.7c-1.4.1-2.7-.3-3.9-1.1v6.4c0 3.5-2.8 6-6 6-3 0-5.4-2.2-5.4-5.2 0-3.3 2.8-5.6 6.2-5.1v2.9c-1.6-.4-3.2.6-3.2 2.2 0 1.4 1.1 2.2 2.3 2.2 1.5 0 2.6-1 2.6-2.8V3h3.7z"/></svg>
+          </a>
+          <a href="https://chat.whatsapp.com/KxqR1wpp4wB1m4uwKectEq?s=cl&p=a&iam=2" target="_blank" rel="noopener" aria-label="WhatsApp Community">
+            <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2zm0 18.2c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.1.8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.6-1.2.1-.2 0-.4 0-.5s-.6-1.4-.8-2c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.4 3.9 1.6.7 2.2.8 3 .6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>
+          </a>
+          <a href="https://t.me/+wseHmdcLIKg2ODJk" target="_blank" rel="noopener" aria-label="Telegram">
+            <svg viewBox="0 0 24 24"><path d="M21.9 4.3 18.7 20c-.2 1-.9 1.3-1.8.8l-4.9-3.6-2.4 2.3c-.3.3-.5.5-1 .5l.3-4.9 8.9-8c.4-.3-.1-.5-.6-.2L6.3 13.3 1.6 11.8c-1-.3-1-1 .2-1.5l18.7-7.2c.8-.3 1.6.2 1.4 1.2z"/></svg>
+          </a>
+          <a href="https://www.youtube.com/@Fasla-English" target="_blank" rel="noopener" aria-label="YouTube">
+            <svg viewBox="0 0 24 24"><path d="M23 7.5s-.2-1.6-.9-2.3c-.9-.9-1.8-.9-2.3-1C16.6 4 12 4 12 4s-4.6 0-7.8.2c-.5.1-1.5.1-2.3 1-.7.7-.9 2.3-.9 2.3S.8 9.4.8 11.3v1.4c0 1.9.2 3.8.2 3.8s.2 1.6.9 2.3c.9.9 2 .9 2.5 1 1.8.2 7.6.2 7.6.2s4.6 0 7.8-.2c.5-.1 1.4-.1 2.3-1 .7-.7.9-2.3.9-2.3s.2-1.9.2-3.8v-1.4c0-1.9-.2-3.8-.2-3.8zM9.8 15.1V8.9l6 3.1-6 3.1z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div>
+        <h4 data-i18n="foot.quick">Quick Links</h4>
+        <ul>
+          <li><a href="#hero" data-i18n="foot.l1">Home</a></li>
+          <li><a href="#about" data-i18n="foot.l2">About</a></li>
+          <li><a href="#courses" data-i18n="foot.l3">Courses</a></li>
+          <li><a href="#/challenge" data-i18n="foot.l4">English Challenge</a></li>
+          <li><a href="#/placement" data-i18n="foot.l5">Free Placement Test</a></li>
+          <li><a href="#reviews" data-i18n="foot.l6">Reviews</a></li>
+          <li><a href="#contact" data-i18n="foot.l7">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.courses">Courses</h4>
+        <ul id="footCourses"></ul>
+      </div>
+      <div>
+        <h4 data-i18n="foot.contact">Contact</h4>
+        <ul>
+          <li><a href="mailto:fasla.english.ceo@gmail.com">fasla.english.ceo@gmail.com</a></li>
+          <li><a href="https://wa.me/201201847164" target="_blank" rel="noopener" class="num">01201847164</a></li>
+          <li><a href="https://wa.me/201201847164" target="_blank" rel="noopener" data-i18n="foot.wa">Chat with FASLA on WhatsApp</a></li>
+          <li><span style="color:rgba(255,255,255,.72)" data-i18n="foot.egypt">Egypt</span></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-legal">
+      <div class="links">
+        <a href="#/privacy" data-i18n="foot.priv">Privacy Policy</a>
+        <a href="#/terms" data-i18n="foot.terms">Terms and Conditions</a>
+        <a href="#/refund" data-i18n="foot.refund">Refund Policy</a>
+      </div>
+      <div>© 2026 FASLA. <span data-i18n="foot.rights">All Rights Reserved.</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   FASLA — core: translations, language state, router, data
+   Single global language state. Read once at boot (before paint),
+   written only by user intent. Never reset on navigation.
+   ============================================================ */
+(function () {
+'use strict';
+
+/* ---------------- 1. TRANSLATION DICTIONARY ---------------- */
+var T = {
+  /* rail + hero */
+  'rail.1':['Hero','الواجهة'], 'rail.2':['About','عن فصلا'], 'rail.3':['Courses','الكورسات'],
+  'rail.4':['Challenge','التحدي'], 'rail.5':['Free Test','الاختبار المجاني'], 'rail.6':['Reviews','الآراء'],
+  'rail.7':['App','التطبيق'], 'rail.8':['Contact','تواصل معنا'],
+  'hero.foil':['Professional English Learning Platform · Egypt','منصة تعليم إنجليزي احترافية · مصر'],
+  'hero.h1a':["English Is Not Just a Language.",'الإنجليزية ليست مجرد لغة.'],
+  'hero.h1b':["It's Your Next Chapter.",'إنها فصلك القادم.'],
+  'hero.sub':['Learn smarter. Speak confidently. Build your future with FASLA.','تعلّم بذكاء. تحدث بثقة. ابنِ مستقبلك مع فصلا.'],
+  'hero.cta1':['Explore Courses','استكشف الكورسات'], 'hero.cta2':['Join FASLA','انضم إلى فصلا'],
+  'hero.s1':['Learning Programs','برامج تعليمية'], 'hero.s2':['Complete CEFR Path','مسار CEFR كامل'],
+  'hero.s3':['Free Placement Questions','سؤال اختبار تحديد مستوى'], 'hero.s4':['Launch Discount','خصم الإطلاق'],
+  /* about */
+  'about.eyebrow':['01 — About FASLA','01 — عن فصلا'], 'about.title':['Meet FASLA','تعرّف على فصلا'],
+  'about.p1':['FASLA is a professional English learning platform dedicated to helping students master the English language through structured educational programs, modern teaching methodologies, and practical learning experiences.','فصلا منصة احترافية لتعليم اللغة الإنجليزية، مكرسة لمساعدة الطلاب على إتقان الإنجليزية من خلال برامج تعليمية منظّمة، ومناهج تدريس حديثة، وخبرات تطبيقية عملية.'],
+  'about.p2':['Our programs are designed for every level, from complete beginners to advanced learners.','برامجنا مصمّمة لكل مستوى، من المبتدئين تمامًا إلى المتقدمين.'],
+  'about.p3':['We focus on developing grammar, reading, writing, speaking, pronunciation, vocabulary, and real-life communication.','نركّز على تنمية القواعد والقراءة والكتابة والتحدث والنطق والمفردات والتواصل في الحياة اليومية.'],
+  'about.p4':['Our mission is to transform English learning into a clear, structured, and effective journey.','مهمتنا هي تحويل تعلّم الإنجليزية إلى رحلة واضحة ومنظّمة وفعّالة.'],
+  'about.p5':["At FASLA, we don't just teach English. We build confidence, communication, and opportunities.",'في فصلا لا نُدرّس الإنجليزية فحسب، بل نبني الثقة والتواصل والفرص.'],
+  'about.f1t':['Professional Learning Paths','مسارات تعلم احترافية'],
+  'about.f1d':['Every level is mapped to clear units, lessons and outcomes — you always know exactly where you are and what comes next.','كل مستوى موزّع على وحدات ودروس ونتائج واضحة — تعرف دائمًا أين أنت وما الخطوة التالية.'],
+  'about.f2t':['Modern Teaching Methods','طرق تدريس حديثة'],
+  'about.f2d':['Blended practice, guided production and continuous feedback instead of memorising rules you never use.','تدريب مدمج وإنتاج موجّه وتغذية راجعة مستمرة بدل حفظ قواعد لا تستخدمها.'],
+  'about.f3t':['Practical English Skills','مهارات إنجليزية عملية'],
+  'about.f3d':['Grammar, reading, writing, speaking and pronunciation trained through real-life communication tasks.','القواعد والقراءة والكتابة والتحدث والنطق تُدرَّب عبر مهام تواصلية من الحياة اليومية.'],
+  'about.tagk':['Our promise','وعدنا'],
+  'about.tagv':['Structured. Practical. Confident.','منظّم. عملي. بثقة.'],
+  /* courses */
+  'courses.eyebrow':['02 — Programs','02 — البرامج'],
+  'courses.title':['Find Your Perfect Learning Path','اعثر على مسار التعلم المثالي لك'],
+  'courses.sub':['Choose your level and start building your English skills with FASLA.','اختر مستواك وابدأ في بناء مهاراتك في الإنجليزية مع فصلا.'],
+  'courses.ctaAll':['View All Course Details','عرض تفاصيل كل الكورسات'],
+  'courses.ctaTest':['Not sure? Take the free placement test','غير متأكد؟ خذ اختبار تحديد المستوى المجاني'],
+  /* challenge */
+  'ch.eyebrow':['03 — Seven Questions','03 — سبعة أسئلة'],
+  'ch.title':['Challenge Your English','تحدَّ نفسك في الإنجليزية'],
+  'ch.sub':['Discover your strengths and weaknesses in just seven questions.','اكتشف نقاط قوتك وضعفك في سبعة أسئلة فقط.'],
+  'ch.box1t':['7 question types','7 أنواع من الأسئلة'],
+  'ch.box1d':['Multiple choice, fill in the blanks, arranging words, matching, error detection, scrambled letters and writing a sentence.','اختيار من متعدد، أكمل الفراغ، ترتيب الكلمات، المطابقة، اكتشف الخطأ، حروف مبعثرة، واكتب جملة.'],
+  'ch.box2t':['Instant analysis','تحليل فوري'],
+  'ch.box2d':['Score out of 7, percentage, grade, mistakes, correct answers, solutions and personalised recommendations.','النتيجة من 7، النسبة المئوية، التقدير، الأخطاء، الإجابات الصحيحة، الحلول وتوصيات مخصصة.'],
+  'ch.box3t':['Course guidance','توجيه للكورسات'],
+  'ch.box3d':['Your result maps directly to the FASLA program that fixes your weakest skill first.','نتيجتك تقودك مباشرة إلى برنامج فصلا الذي يعالج أضعف مهارة لديك أولًا.'],
+  'ch.cta':['Start the Challenge','ابدأ التحدي'], 'ch.cta2':['Take the 60-question test instead','أو خذ اختبار الـ60 سؤالًا'],
+  /* placement */
+  'pl.eyebrow':['04 — Free Assessment','04 — تقييم مجاني'],
+  'pl.title':['Discover Your True English Level – For FREE!','اكتشف مستواك الحقيقي في الإنجليزية — مجانًا!'],
+  'pl.sub':['Take our comprehensive English assessment and discover your level from A1 to C1.','خذ تقييمًا شاملًا للغة الإنجليزية واكتشف مستواك من A1 إلى C1.'],
+  'pl.st1':['Questions','سؤال'], 'pl.st2':['Levels Covered','المستويات'],
+  'pl.st3':['Assessment','التقييم'], 'pl.st3v':['Free','مجاني'],
+  'pl.st4':['Personalised Results','نتائج مخصصة'], 'pl.st4v':['Yes','نعم'],
+  'pl.cta':['Start Your Free Test','ابدأ اختبارك المجاني'], 'pl.cta2':['View my saved result','عرض نتيجتي المحفوظة'],
+  'pl.cardt':['What you get after the test','ماذا تحصل عليه بعد الاختبار'],
+  'pl.r1t':['Your CEFR level (A1–C1)','مستواك وفق CEFR (A1–C1)'],
+  'pl.r1d':['Calculated transparently from your real answers across five levels.','يُحسب بشفافية من إجاباتك الفعلية عبر خمسة مستويات.'],
+  'pl.r2t':['Strongest & weakest skills','أقوى وأضعف المهارات'],
+  'pl.r2d':['Grammar, vocabulary, reading, writing, listening and pronunciation.','القواعد والمفردات والقراءة والكتابة والاستماع والنطق.'],
+  'pl.r3t':['Explanations for every mistake','شرح لكل خطأ'],
+  'pl.r3d':['So you learn from the test instead of just seeing a score.','لتتعلم من الاختبار بدل رؤية نتيجة فقط.'],
+  'pl.r4t':['A recommended FASLA course','كورس فصلا المقترح'],
+  'pl.r4d':['With a full report you can send to FASLA on WhatsApp.','مع تقرير كامل يمكنك إرساله إلى فصلا عبر واتساب.'],
+  /* reviews */
+  'rv.eyebrow':['05 — Student Voices','05 — أصوات الطلاب'],
+  'rv.title':['What Our Students Say','ماذا يقول طلابنا'],
+  'rv.sub':['Real stories from Egyptian university students who rebuilt their English with FASLA.','قصص طلاب جامعيين مصريين أعادوا بناء لغتهم الإنجليزية مع فصلا.'],
+  'rv.flag':['Sample reviews — shown until genuine reviews are collected','عيّنات تقييمات — تُعرض حتى يتم جمع تقييمات حقيقية'],
+  /* app */
+  'app.eyebrow':['06 — Mobile Application','06 — التطبيق المحمول'],
+  'app.title':['FASLA Is Coming to Your Pocket!','فصلا قادم إلى جيبك!'],
+  'app.sub':['Your English learning experience will soon be available wherever you go.','تجربة تعلّم الإنجليزية ستكون متاحة معك أينما ذهبت قريبًا.'],
+  'app.badge':['Coming Soon','قريبًا'], 'app.soon':['Coming Soon','قريبًا'],
+  'app.note':['No download links are available yet — the app is still in development. We will publish official store links here the day it launches.','لا توجد روابط تحميل بعد — التطبيق لا يزال قيد التطوير. سننشر روابط المتاجر الرسمية هنا يوم الإطلاق.'],
+  'app.ph1':['FASLA · Unit 06','فصلا · الوحدة 06'], 'app.ph2':['Daily Conversation','محادثة يومية'],
+  'app.ph3':['Warm-up vocabulary','تمهيد المفردات'], 'app.ph4':['Listen & repeat','استمع وكرّر'],
+  'app.ph5':['Speak with FASLA','تحدث مع فصلا'], 'app.ph6':['Grammar check','مراجعة القواعد'],
+  /* footer */
+  'foot.tag':['Learn Smarter. Speak Better.','تعلّم بذكاء. تحدث بشكل أفضل.'],
+  'foot.about':['A professional English learning platform built on structure, practice and confidence — from complete beginner to advanced.','منصة احترافية لتعليم الإنجليزية مبنية على التنظيم والتدريب والثقة — من المبتدئ إلى المتقدم.'],
+  'foot.quick':['Quick Links','روابط سريعة'], 'foot.l1':['Home','الرئيسية'], 'foot.l2':['About','عن فصلا'],
+  'foot.l3':['Courses','الكورسات'], 'foot.l4':['English Challenge','تحدي الإنجليزية'],
+  'foot.l5':['Free Placement Test','اختبار تحديد المستوى'], 'foot.l6':['Reviews','الآراء'], 'foot.l7':['Contact','تواصل معنا'],
+  'foot.courses':['Courses','الكورسات'], 'foot.contact':['Contact','تواصل'],
+  'foot.wa':['Chat with FASLA on WhatsApp','تواصل مع فصلا عبر واتساب'], 'foot.egypt':['Egypt','مصر'],
+  'foot.priv':['Privacy Policy','سياسة الخصوصية'], 'foot.terms':['Terms and Conditions','الشروط والأحكام'],
+  'foot.refund':['Refund Policy','سياسة الاسترجاع'], 'foot.rights':['All Rights Reserved.','جميع الحقوق محفوظة.'],
+  /* course cards + details */
+  'c.level':['Level','المستوى'], 'c.duration':['Duration','المدة'], 'c.units':['Units','الوحدات'],
+  'c.lessons':['Lessons','الدروس'], 'c.days':['days','يوم'],
+  'c.details':['Course Details','تفاصيل الكورس'], 'c.register':['Register Now','سجّل الآن'],
+  'c.egp':['EGP','ج.م'], 'c.limited':['Limited Offer','عرض لفترة محدودة'],
+  'c.off':['50% OFF','خصم 50%'], 'c.contactUs':['Contact FASLA','تواصل مع فصلا'],
+  'c.sampleBadge':['Sample Price','سعر تجريبي'],
+  'c.sampleNote':['Sample price — editable, not an officially confirmed price.','سعر تجريبي — قابل للتعديل، وليس سعرًا رسميًا مؤكدًا.'],
+  'c.outcomesTitle':['What you will learn','ماذا ستتعلم'],
+  'c.skillsTitle':['Skills covered','المهارات'],
+  'c.curriculumTitle':['Curriculum — units & lessons','المنهج — الوحدات والدروس'],
+  'c.faqTitle':['Frequently asked questions','الأسئلة الشائعة'],
+  'c.pricingTitle':['Pricing','الأسعار'],
+  'c.officialPrice':['Official FASLA price','سعر فصلا الرسمي'],
+  'c.backCourses':['All courses','كل الكورسات'],
+  'c.durationCustom':['Customised duration','مدة مخصّصة'],
+  'c.unit':['Unit','وحدة'], 'c.lesson':['lesson','درس'],
+  'c.enrollNow':['Register for this course','سجّل في هذا الكورس'],
+  'c.notFound':['Course not found','الكورس غير موجود'],
+  /* quiz shared */
+  'q.start':['Start','ابدأ'], 'q.next':['Next','التالي'], 'q.prev':['Previous','السابق'],
+  'q.submit':['Submit','إرسال'], 'q.retry':['Try Again','حاول مرة أخرى'],
+  'q.question':['Question','سؤال'], 'q.of':['of','من'],
+  'q.type_m':['Multiple choice','اختيار من متعدد'], 'q.type_f':['Fill in the blank','أكمل الفراغ'],
+  'q.type_a':['Arrange the words','رتّب الكلمات'], 'q.type_k':['Matching','مطابقة'],
+  'q.type_e':['Find the mistake','اكتشف الخطأ'], 'q.type_s':['Scrambled letters','حروف مبعثرة'],
+  'q.type_w':['Write a sentence','اكتب جملة'], 'q.type_l':['Listen and write','استمع واكتب'],
+  'q.timeLeft':['Time left','الوقت المتبقي'],
+  'q.autoSaved':['Time is up — your answer was saved automatically.','انتهى الوقت — تم حفظ إجابتك تلقائيًا.'],
+  'q.score':['Score','النتيجة'], 'q.percent':['Percentage','النسبة'], 'q.grade':['Grade','التقدير'],
+  'q.strengths':['Strongest skills','أقوى المهارات'], 'q.weaknesses':['Weakest skills','أضعف المهارات'],
+  'q.mistakes':['Mistakes & corrections','الأخطاء والتصحيحات'],
+  'q.yourAnswer':['Your answer','إجابتك'], 'q.correctAnswer':['Correct answer','الإجابة الصحيحة'],
+  'q.solution':['Solution','الحل'], 'q.recommend':['Personalised recommendations','توصيات مخصصة'],
+  'q.recCourses':['Recommended courses','الكورسات المقترحة'],
+  'q.reviewIntro':['Review every question with the correct answer and an explanation.','راجع كل سؤال مع الإجابة الصحيحة والشرح.'],
+  'q.backHome':['Back to home','العودة للرئيسية'],
+  'q.level':['Level','المستوى'], 'q.skill':['Skill','المهارة'],
+  'q.skip':['Skip','تخطي'], 'q.answered':['Answered','تمت الإجابة'],
+  'q.wordsBox':['Tap the words in the correct order','اضغط على الكلمات بالترتيب الصحيح'],
+  'q.tapToRemove':['Tap a word to remove it','اضغط على كلمة لحذفها'],
+  'q.listen':['Play the sentence','شغّل الجملة'],
+  'q.writeHere':['Write your answer here','اكتب إجابتك هنا'],
+  'q.matchPrompt':['Match each item with the correct option','طابق كل عنصر مع الخيار الصحيح'],
+  'q.resultTitle':['Your Result','نتيجتك'],
+  'q.elapsed':['Time used','الوقت المستغرق'],
+  'q.none':['None','لا يوجد'],
+  /* registration */
+  'r.title':['Student Registration','تسجيل الطالب'], 'r.sub':['Complete your details and start your journey with FASLA.','أكمل بياناتك وابدأ رحلتك مع فصلا.'],
+  'r.sec1':['Personal Information','البيانات الشخصية'], 'r.sec2':['Contact Information','بيانات التواصل'],
+  'r.sec3':['Educational Information','البيانات التعليمية'], 'r.sec4':['Course Information','بيانات الكورس'],
+  'r.sec5':['Additional Information — optional','معلومات إضافية — اختيارية'],
+  'r.fullName':['Full Name','الاسم الكامل'], 'r.dob':['Date of Birth','تاريخ الميلاد'], 'r.age':['Age','العمر'],
+  'r.gender':['Gender','النوع'], 'r.gov':['Governorate','المحافظة'], 'r.city':['City or Area','المدينة أو المنطقة'],
+  'r.wa':['WhatsApp Number','رقم واتساب'], 'r.alt':['Alternative Phone Number','رقم هاتف بديل'],
+  'r.email':['Email Address','البريد الإلكتروني'], 'r.school':['School or University Name','اسم المدرسة أو الجامعة'],
+  'r.faculty':['Faculty','الكلية'], 'r.course':['Selected Course','الكورس المختار'],
+  'r.schedule':['Preferred Learning Schedule','الموعد المفضل للتعلم'], 'r.levelNow':['Current English Level','مستواك الحالي في الإنجليزية'],
+  'r.prev':['Previous English Courses','كورسات إنجليزية سابقة'], 'r.goals':['Learning Goals','أهداف التعلم'],
+  'r.why':['Why do you want to learn English?','لماذا تريد تعلم الإنجليزية؟'],
+  'r.hard':['What is your biggest difficulty with English?','ما أكبر صعوبة تواجهك في الإنجليزية؟'],
+  'r.notes':['Additional Notes','ملاحظات إضافية'],
+  'r.optional':['optional','اختياري'], 'r.required':'required',
+  'r.review':['Review your information','راجع بياناتك'], 'r.submitBtn':['Submit Registration','إرسال التسجيل'],
+  'r.edit':['Edit information','تعديل البيانات'], 'r.agreePrivacy':['I have read and accept the Privacy Policy.','قرأت وأوافق على سياسة الخصوصية.'],
+  'r.agreeTerms':['I accept the Terms and Conditions.','أوافق على الشروف والأحكام.'],
+  'r.consentNote':['Your data is used only to contact you about your FASLA course. See our Privacy Policy.','تُستخدم بياناتك فقط للتواصل معك بخصوص كورسك في فصلا. راجع سياسة الخصوصية.'],
+  'r.doneTitle':['Registration received','تم استلام تسجيلك'],
+  'r.doneMsg':['Your registration details are ready. Please press Send in WhatsApp to deliver your report to FASLA — it is not sent automatically.','بيانات تسجيلك جاهزة. اضغط "إرسال" في واتساب لإرسال تقريرك إلى فصلا — الرسالة لا تُرسل تلقائيًا.'],
+  'r.openWa':['Open WhatsApp report','فتح تقرير واتساب'], 'r.sendEmail':['Send by email','الإرسال بالبريد'],
+  'r.errReq':['This field is required.','هذا الحقل مطلوب.'],
+  'r.errEmail':['Please enter a valid email address.','يرجى إدخال بريد إلكتروني صحيح.'],
+  'r.errPhone':['Please enter a valid Egyptian phone number (11 digits starting with 01).','يرجى إدخال رقم مصري صحيح (11 رقمًا يبدأ بـ 01).'],
+  'r.errNum':['Please enter a valid number.','يرجى إدخال رقم صحيح.'],
+  'r.errCheck':['You must accept this to continue.','يجب الموافقة للمتابعة.'],
+  'r.errAge':['Please enter an age between 5 and 99.','يرجى إدخال عمر بين 5 و 99.'],
+  'r.waTitle':['Registration report — FASLA','تقرير التسجيل — فصلا'],
+  'r.courseAuto':['Course selected automatically from your choice.','تم اختيار الكورس تلقائيًا من اختيارك.'],
+  /* placement engine */
+  'p.studentInfo':['Student information','بيانات الطالب'],
+  'p.startTest':['Start the test','بدء الاختبار'],
+  'p.resume':['Resume my attempt','استكمال محاولة'],
+  'p.resumeNote':['You have an unfinished attempt saved on this browser.','لديك محاولة غير مكتملة محفوظة على هذا المتصفح.'],
+  'p.completedNote':['This browser has already completed the placement test. Your saved result is shown below.','اكتمل اختبار تحديد المستوى على هذا المتصفح بالفعل. نتيجتك المحفوظة أدناه.'],
+  'p.limitation':['Frontend-only limitation','قيود الموقع الأمامي'],
+  'p.limitationTxt':['This website has no backend. Progress and the one-attempt rule are enforced with browser localStorage only. Clearing browser data, using another browser or another device can bypass this. It is not a secure server-side restriction.','هذا الموقع بدون خادم خلفي. يُعتمد على التخزين المحلي للمتصفح فقط لحفظ التقدم وقاعدة المحاولة الواحدة. مسح بيانات المتصفح أو استخدام متصفح أو جهاز آخر يمكن أن يتجاوز ذلك، وهو ليس قيدًا آمنًا من الخادم.'],
+  'p.qOf':['Question','سؤال'],
+  'p.saveNext':['Save & next','حفظ والتالي'],
+  'p.finish':['Finish test','إنهاء الاختبار'],
+  'p.confirmFinish':['Submit the test now? Unanswered questions will be scored as zero.','هل تريد إرسال الاختبار الآن؟ الأسئلة غير المجابة ستُحسب صفرًا.'],
+  'p.savedAt':['Progress saved locally','تم حفظ التقدم محليًا'],
+  'p.resultTitle':['Placement test result','نتيجة اختبار تحديد المستوى'],
+  'p.name':['Student name','اسم الطالب'], 'p.ageLbl':['Age','العمر'], 'p.govLbl':['Governorate','المحافظة'],
+  'p.phoneLbl':['WhatsApp','واتساب'], 'p.attempt':['Attempt ID','رقم المحاولة'],
+  'p.scoreOf':['Score out of 120','النتيجة من 120'], 'p.cefr':['Estimated CEFR level','المستوى المقدر وفق CEFR'],
+  'p.overall':['Overall grade','التقدير العام'], 'p.skillBreakdown':['Skills breakdown','تفصيل المهارات'],
+  'p.advice':['Personalised improvement advice','نصائح تحسين مخصصة'],
+  'p.waReport':['Send report to FASLA on WhatsApp','إرسال التقرير لفصلا عبر واتساب'],
+  'p.waHint':['The report opens ready in WhatsApp. You must press Send yourself.','يفتح التقرير جاهزًا في واتساب، ويجب أن تضغط "إرسال" بنفسك.'],
+  'p.incorrect':['Incorrect answers with explanations','الإجابات الخاطئة مع الشرح'],
+  'p.allCorrect':['No incorrect answers — excellent work.','لا توجد إجابات خاطئة — عمل ممتاز.'],
+  'p.timeUp':['Time is up for this question — moving on.','انتهى وقت هذا السؤال — سيتم الانتقال.'],
+  'p.reportTitle':['FASLA Placement Test Report','تقرير اختبار تحديد مستوى فصلا'],
+  'p.generalEval':['General evaluation','التقييم العام'], 'p.strengthsLbl':['Strengths','نقاط القوة'],
+  'p.weakLbl':['Weaknesses','نقاط الضعف'], 'p.solutions':['Suggested solutions','الحلول المقترحة'],
+  'p.recommendations':['Recommendations','التوصيات'],
+  /* legal */
+  'lg.updated':['Last updated: January 2026','آخر تحديث: يناير 2026'],
+  'lg.privTitle':['Privacy Policy','سياسة الخصوصية'],
+  'lg.termsTitle':['Terms and Conditions','الشروط والأحكام'],
+  'lg.refundTitle':['Refund Policy','سياسة الاسترجاع'],
+  'lg.back':['Back to home','العودة للرئيسية'],
+  'notice.langSaved':['Language updated','تم تحديث اللغة']
+};
+
+/* ---------------- 2. LANGUAGE STATE (single, global) ---------------- */
+var state = {
+  lang: (window.__FASLA_LANG__ === 'ar') ? 'ar' : 'en',
+  view: 'home'
+};
+function idx() { return state.lang === 'ar' ? 1 : 0; }
+function t(key) {
+  var row = T[key];
+  if (!row) return key;
+  return typeof row === 'string' ? row : row[idx()];
+}
+function tx(arr) { return arr ? (arr[idx()] || arr[0]) : ''; }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c];
+  });
+}
+function money(v) {
+  var n = Number(v);
+  return Number.isInteger(n) ? String(n) : n.toFixed(2);
+}
+function applyI18n(root) {
+  var nodes = (root || document).querySelectorAll('[data-i18n]');
+  for (var i = 0; i < nodes.length; i++) nodes[i].textContent = t(nodes[i].getAttribute('data-i18n'));
+}
+function setLang(lang, silent) {
+  if (lang !== 'ar' && lang !== 'en') return;
+  state.lang = lang;                       /* the only writer */
+  try { localStorage.setItem('fasla_lang', lang); } catch (e) {}
+  var html = document.documentElement;
+  html.lang = lang;
+  html.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+  document.title = (lang === 'ar')
+    ? 'فصلا — تعلّم بذكاء. تحدث بشكل أفضل.'
+    : 'FASLA — Learn Smarter. Speak Better.';
+  var btns = document.querySelectorAll('.langbar button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].classList.toggle('is-on', btns[i].getAttribute('data-lang') === lang);
+    btns[i].setAttribute('aria-pressed', btns[i].getAttribute('data-lang') === lang ? 'true' : 'false');
+  }
+  applyI18n();
+  renderHomeDynamic();      /* re-render dynamic blocks in the current language */
+  if (state.view !== 'home') route(true);   /* re-render the open page, no reload */
+  if (!silent) flash(t('notice.langSaved'));
+}
+function flash(msg) {
+  var el = document.createElement('div');
+  el.textContent = msg;
+  el.setAttribute('role', 'status');
+  el.style.cssText = 'position:fixed;bottom:20px;inset-inline-start:20px;z-index:300;background:#082B59;color:#fff;' +
+    'padding:13px 20px;font:600 13px/1.5 Inter,sans-serif;letter-spacing:.04em;box-shadow:0 16px 40px rgba(6,32,63,.3);' +
+    'opacity:0;transform:translateY(10px);transition:.28s';
+  document.body.appendChild(el);
+  requestAnimationFrame(function () { el.style.opacity = '1'; el.style.transform = 'none'; });
+  setTimeout(function () {
+    el.style.opacity = '0'; el.style.transform = 'translateY(10px)';
+    setTimeout(function () { el.remove(); }, 320);
+  }, 2200);
+}
+
+/* ---------------- 3. COURSE DATA (single source of pricing) ---------------- */
+var DISCOUNT = 50; /* official FASLA launch discount — used everywhere via JS */
+var COURSES = [
+  {
+    id: 'a1', code: 'A1', kind: 'level',
+    name: ['A1 – Beginner', 'A1 – المبتدئ'],
+    level: ['Beginner', 'مبتدئ'],
+    days: 40, units: 10, lessons: 170, price: 799,
+    desc: [
+      'Start from zero: the alphabet, sound system and the first structures you need for everyday life.',
+      'ابدأ من الصفر: الحروف والنظام الصوتي وأولى البنية التي تحتاجها في حياتك اليومية.'],
+    outcomes: [
+      ['Introduce yourself and handle simple everyday conversations.', 'قدّم نفسك وتعامل مع محادثات يومية بسيطة.'],
+      ['Use present simple, past simple and basic question forms.', 'استخدم المضارع البسيط والماضي البسيط وأشكال الأسئلة الأساسية.'],
+      ['Understand slow, clear speech on familiar topics.', 'افهم الكلام البطيء الواضح في مواضيع مألوفة.'],
+      ['Write short sentences, notes and simple messages.', 'اكتب جملًا قصيرة وملاحظات ورسائل بسيطة.']],
+    topics: [
+      ['Greetings & introductions', 'التحيات والتعارف'], ['Numbers, days & time', 'الأيام والأرقام والوقت'],
+      ['Family & people around me', 'العائلة والأشخاص من حولي'], ['Daily routines', 'الروتين اليومي'],
+      ['Food, drinks & ordering', 'الطعام والشراب والطلب'], ['Places & directions', 'الأماكن والاتجاهات'],
+      ['Past simple experiences', 'تجارب الماضي البسيط'], ['Sounds & pronunciation basics', 'الأصوات وأساسيات النطق']]
+  },
+  {
+    id: 'a2', code: 'A2', kind: 'level',
+    name: ['A2 – Elementary', 'A2 – التأسيسي'],
+    level: ['Elementary', 'تأسيسي'],
+    days: 60, units: 15, lessons: 185, price: 998,
+    desc: [
+      'Build the foundation that makes real conversation possible — more tenses, more vocabulary, more confidence.',
+      'ابنِ الأساس الذي يجعل المحادثة الحقيقية ممكنة — أزمنة أكثر، مفردات أكثر، ثقة أكبر.'],
+    outcomes: [
+      ['Take part in short conversations on familiar subjects.', 'شارك في محادثات قصيرة في مواضيع مألوفة.'],
+      ['Describe your routine, plans and past experiences in detail.', 'صف روتينك وخططك وتجاربك السابقة بالتفصيل.'],
+      ['Write short emails, paragraphs and personal letters.', 'اكتب رسائل قصيرة وفقرات ورسائل شخصية.'],
+      ['Understand the main points of clear standard speech.', 'افهم النقاط الأساسية للكلام الواضح القياسي.']],
+    topics: [
+      ['Comparatives & superlatives', 'المقارنة والتفضيل'], ['Future plans & arrangements', 'الخطط والترتيبات المستقبلية'],
+      ['Present perfect basics', 'أساسيات المضارع التام'], ['Health & lifestyle', 'الصحة ونمط الحياة'],
+      ['Travel & holidays', 'السفر والعطل'], ['Shopping & services', 'التسوق والخدمات'],
+      ['Describing people & places', 'وصف الأشخاص والأماكن'], ['Linking words & storytelling', 'أدوات الربط والسرد']]
+  },
+  {
+    id: 'b1', code: 'B1', kind: 'level',
+    name: ['B1 – Intermediate', 'B1 – المتوسط'],
+    level: ['Intermediate', 'متوسط'],
+    days: 90, units: 22, lessons: 203, price: 1197,
+    desc: [
+      'The turning point: speak with fluency, argue a point in English and understand native speakers at normal speed.',
+      'نقطة التحوّل: تحدث بطلاقة، وناقش رأيك بالإنجليزية، وافهم الناطقين الأصليين بسرعة طبيعية.'],
+    outcomes: [
+      ['Hold a conversation without switching back to Arabic.', 'أكمل محادثة دون العودة إلى العربية.'],
+      ['Express opinions, agree, disagree and explain reasons.', 'عبّر عن آرائك ووافق واعترض واشرح الأسباب.'],
+      ['Write structured essays, reports and formal emails.', 'اكتب مقالات وتقارير ورسائل رسمية منظمة.'],
+      ['Understand films, podcasts and articles with confidence.', 'افهم الأفلام والبودكاست والمقالات بثقة.']],
+    topics: [
+      ['Opinions & discussion language', 'لغة الآراء والمناقشة'], ['Phrasal verbs in context', 'الأفعال المركبة في السياق'],
+      ['Conditionals (1st, 2nd, 3rd)', 'الجمل الشرطية'], ['Reported speech', 'الكلام المنقول'],
+      ['Passive voice', 'المبني للمجهول'], ['Academic & formal writing', 'الكتابة الأكاديمية والرسمية'],
+      ['Idioms & natural expressions', 'التعبيرات الاصطلاحية الطبيعية'], ['Listening for detail', 'الاستماع للتفاصيل']]
+  },
+  {
+    id: 'b2', code: 'B2', kind: 'level',
+    name: ['B2 – Upper Intermediate', 'B2 – فوق المتوسط'],
+    level: ['Upper Intermediate', 'فوق المتوسط'],
+    days: 120, units: 30, lessons: 227, price: 1396,
+    desc: [
+      'Advanced control of English for university, work and international exams — nuance, style and precision.',
+      'تحكّم متقدم في الإنجليزية للجامعة والعمل والاختبارات العالمية — بالدقة والأسلوب والفروق الدقيقة.'],
+    outcomes: [
+      ['Debate complex topics fluently and spontaneously.', 'ناقش مواضيع معقدة بطلاقه وعفوية.'],
+      ['Write academic essays and professional reports.', 'اكتب مقالات أكاديمية وتقارير مهنية.'],
+      ['Understand extended speech, lectures and native media.', 'افهم الخطاب المطوّل والمحاضرات والإعلام الأصلي.'],
+      ['Use idiomatic language and fine-grained vocabulary.', 'استخدم اللغة الاصطلاحية والمفردات الدقيقة.']],
+    topics: [
+      ['Nuance, register & style', 'الفروق الدقيقة والمستوى الأسلوبي'], ['Advanced conditionals & inversion', 'الشرط المتقدم والقلب'],
+      ['Cleft sentences & emphasis', 'جمل التركيز'], ['Academic reading strategies', 'استراتيجيات القراءة الأكاديمية'],
+      ['Debate & presentation skills', 'مهارات النقاش والعرض'], ['Collocations & word partners', 'التوافقيات اللغوية'],
+      ['Advanced listening & note-taking', 'الاستماع المتقدم وتدوين الملاحظات'], ['Exam writing techniques', 'تقنيات كتابة الاختبارات']]
+  },
+  {
+    id: 'c1', code: 'C1', kind: 'contact',
+    name: ['C1 – Advanced', 'C1 – المتقدم'],
+    level: ['Advanced', 'متقدم'],
+    price: null,
+    desc: [
+      'A personalised advanced program built around your goals: IELTS, academic study, career English or full fluency.',
+      'برنامج متقدم مخصص حول أهدافك: IELTS، أو الدراسة الأكاديمية، أو الإنجليزية المهنية، أو الطلاقة الكاملة.'],
+    outcomes: [
+      ['Speak with near-native fluency and precise control.', 'تحدث بطاقة تشبه الأصليين مع تحكّم دقيق.'],
+      ['Produce high-level academic and professional writing.', 'إنتاج كتابة أكاديمية ومهنية عالية المستوى.'],
+      ['Follow any native-level material with full understanding.', 'تابع أي مادة بمستوى الأصليين بفهم كامل.'],
+      ['Prepare confidently for international exams.', 'استعد بثقة للاختبارات العالمية.']],
+    topics: [
+      ['Advanced discourse & pragmatics', 'الخطاب المتقدم وال التداولية'], ['Critical reading & analysis', 'القراءة النقدية والتحليل'],
+      ['Research writing & referencing', 'الكتابة البحثية والمراجع'], ['Advanced pronunciation & prosody', 'النطق المتقدم والإيقاع'],
+      ['Professional communication', 'التواصل المهني'], ['Exam strategy & mock tests', 'استراتيجية الاختبارات والتجارب'],
+      ['Presentation & public speaking', 'العرض والتحدث أمام الجمهور'], ['Full fluency coaching', 'تدريب الطلاقة الكاملة']]
+  },
+  {
+    id: 'grammar', code: 'GRAMMAR', kind: 'sample',
+    name: ['Grammar Mastery', 'إتقان القواعد'],
+    level: ['All Levels', 'كل المستويات'],
+    days: 45, units: 12, lessons: 96, price: 899,
+    desc: [
+      'Grammar from beginner to advanced, taught through practical exercises and real-life applications.',
+      'القواعد من المبتدئ إلى المتقدم، بتمارين تطبيقية واستخدامات من الحياة اليومية.'],
+    outcomes: [
+      ['Master tenses, clauses and sentence structure.', 'أتقن الأزمنة والعبارات وبنية الجملة.'],
+      ['Apply grammar rules in real speaking and writing.', 'طبّق قواعد النحو في التحدث والكتابة الفعليين.'],
+      ['Spot and correct your own repeated mistakes.', 'اكتشف أخطاءك المتكررة وصححها بنفسك.'],
+      ['Write accurate, well-structured sentences.', 'اكتب جملًا سليمة وبنية جيدة.']],
+    topics: [
+      ['Tenses review', 'مراجعة الأزمنة'], ['Articles & determiners', 'أدوات التعريف والتحديد'],
+      ['Conditionals', 'الجمل الشرطية'], ['Reported speech', 'الكلام المنقول'],
+      ['Passive constructions', 'المبني للمجهول'], ['Relative clauses', 'الجمل الموصولة'],
+      ['Gerunds & infinitives', 'المصدر واسم الفعل'], ['Common error correction', 'تصحيح الأخطاء الشائعة']]
+  },
+  {
+    id: 'speaking', code: 'SPEAKING', kind: 'sample',
+    name: ['Speaking Mastery', 'إتقان المحادثة'],
+    level: ['All Levels', 'كل المستويات'],
+    days: 30, units: 8, lessons: 64, price: 899,
+    desc: [
+      'Pronunciation, fluency and daily conversation training that turns knowledge into spoken confidence.',
+      'تدريب النطق والطلاقه والمحادثة اليومية لتحويل المعرفة إلى ثقة في التحدث.'],
+    outcomes: [
+      ['Improve pronunciation, stress and intonation.', 'حسّن النطق والتنغيم والإيقاع.'],
+      ['Speak more fluently with fewer pauses.', 'تحدث بطلاقة أكبر وتوقفات أقل.'],
+      ['Handle daily conversations with confidence.', 'تعامل مع المحادثات اليومية بثقة.'],
+      ['Build the habit of thinking directly in English.', 'ابنِ عادة التفكير مباشرة بالإنجليزية.']],
+    topics: [
+      ['Sounds & minimal pairs', 'الأصوات والحركات'], ['Word stress & rhythm', 'التنغيم والإيقاع'],
+      ['Intonation for meaning', 'التنغيم للمعنى'], ['Small talk & daily situations', 'الدردشة والمواقف اليومية'],
+      ['Fluency drills & shadowing', 'تمارين الطلاقة والمحاكاة'], ['Opinions & discussion practice', 'تدريب الآراء والنقاش'],
+      ['Presentation speaking', 'التحدث في العروض'], ['Confidence & error recovery', 'الثقة والتعامل مع الخطأ']]
+  }
+];
+
+function courseById(id) {
+  for (var i = 0; i < COURSES.length; i++) if (COURSES[i].id === id) return COURSES[i];
+  return null;
+}
+function finalPrice(c) {
+  if (c.price == null) return null;
+  return Math.round(c.price * (100 - DISCOUNT)) / 100;
+}
+
+/* ---------------- 4. TESTIMONIALS (sample reviews) ---------------- */
+var REVIEWS = [
+  ['Mariam Adel', 'Faculty of Arts — Cairo University', 5, ['FASLA made grammar finally make sense. I stopped translating in my head after the third unit.','جعلت فصلا القواعد مفهومة أخيرًا. توقفت عن الترجمة في رأسي بعد الوحدة الثالثة.']],
+  ['Youssef Sherif', 'Faculty of Engineering — Ain Shams', 5, ['The speaking sessions are the real deal. I now present my graduation project in English without freezing.','جلسات المحادثة هي الأهم الآن أقدم مشروع تخرجي بالإنجليزية دون أن أتجمد.']],
+  ['Nourhan Khaled', 'Faculty of Commerce — Alexandria', 4, ['The placement test put me in exactly the right level. No wasting time repeating what I already knew.','اختبار التحديد وضعني في المستوى الصحيح تمامًا دون إضاعة وقت.']],
+  ['Ahmed Tarek', 'Faculty of Computers — Menoufia', 5, ['I needed English for remote work. FASLA focused on emails, meetings and interviews — exactly what I use daily.','احتجت الإنجليزية للعمل عن بُعد، وركزت فصلا على الإيميلات والاجتماعات والمقابلات.']],
+  ['Salma Ibrahim', 'Faculty of Medicine — Mansoura', 4, ['Reading medical texts in English used to take me an hour. Now it takes fifteen minutes.','قراءة النصوص الطبية بالإنجليزية كانت تستغرق ساعة، والآن خمس عشرة دقيقة.']],
+  ['Omar Nabil', 'Faculty of Law — Cairo', 5, ['The structured path is what sets FASLA apart. Every unit has a clear goal and a clear result.','المسار المنظم هو ما يميز فصلا. كل وحدة لها هدف واضح ونتيجة واضحة.']],
+  ['Hana Mostafa', 'Faculty of Alsun — Suez Canal', 5, ['My pronunciation improved dramatically. The feedback on every recording was detailed and honest.','تحسن نطقي بشكل كبير، والملاحظات على كل تسجيل كانت دقيقة وصادقة.']],
+  ['Karim Fathy', 'Faculty of Engineering — AAST', 4, ['Affordable and serious at the same time. The 50% offer made it an easy decision.','جودة عالية بسعر منطقي، وعرض الخصم 50% جعل القرار سهلًا.']],
+  ['Aya Mahmoud', 'Faculty of Education — Helwan', 5, ['I passed my interview in English and got the internship. I still use the phrases from unit 12.','نجحت في مقابلة العمل بالإنجليزية وحصلت على التدريب، وما زلت أستخدم جمل الوحدة 12.']],
+  ['Ziad Ashraf', 'Faculty of Business — Future University', 4, ['The daily conversation practice removed my fear of speaking in front of people.','تدريب المحادثة اليومية أزال خوفي من التحدث أمام الناس.']],
+  ['Laila Hassan', 'Faculty of Fine Arts — Minia', 5, ['Beautiful lessons, organised content and teachers who actually care about your progress.','دروس جميلة ومحتوى منظم ومدرسين يهتمون حقًا بتقدمك.']],
+  ['Mostafa Ehab', 'Faculty of Engineering — Tanta', 5, ['From A2 to B2 in two levels. The weekly feedback kept me consistent and accountable.','من A2 إلى B2 في مستويين. الملاحظات الأسبوعية جعلتني منتظمًا ومسؤولًا.']]
+];
+
+/* ---------------- 5. RENDER: home dynamic blocks ---------------- */
+function courseCardHTML(c) {
+  var isContact = c.price == null;
+  var fp = finalPrice(c);
+  var ribbon = isContact
+    ? '<div class="ribbon ribbon--contact">' + esc(t('c.contactUs')) + '</div>'
+    : (c.kind === 'sample'
+      ? '<div class="ribbon ribbon--sample">' + esc(t('c.sampleBadge')) + '</div>'
+      : '<div class="ribbon">' + esc(t('c.off')) + '</div>');
+  var ledger = isContact
+    ? '<div class="ledger"><span class="contact-price">' + esc(t('c.contactUs')) + '</span>' +
+      '<span class="off-note">' + esc(t('c.officialPrice')) + '</span></div>'
+    : '<div class="ledger">' +
+      '<span class="old num">' + esc(t('c.egp')) + ' ' + money(c.price) + '</span>' +
+      '<span class="new num">' + esc(t('c.egp')) + ' ' + money(fp) + '</span>' +
+      '<span class="off-note">' + esc(t('c.limited')) + '</span></div>';
+  return '<article class="ccard rv">' + ribbon +
+    '<div class="lvl">' + esc(tx(c.level)) + '</div>' +
+    '<h3>' + esc(tx(c.name)) + '</h3>' +
+    '<p class="desc">' + esc(tx(c.desc)) + '</p>' +
+    '<div class="meta">' +
+      '<div><span>' + esc(t('c.duration')) + '</span><b class="num">' + (isContact ? esc(t('c.durationCustom')) : c.days + ' ' + esc(t('c.days'))) + '</b></div>' +
+      '<div><span>' + esc(t('c.units')) + '</span><b class="num">' + (isContact ? '—' : c.units) + '</b></div>' +
+      '<div><span>' + esc(t('c.lessons')) + '</span><b class="num">' + (isContact ? '—' : c.lessons) + '</b></div>' +
+      '<div><span>' + esc(t('c.level')) + '</span><b>' + esc(tx(c.level)) + '</b></div>' +
+    '</div>' + ledger +
+    '<ul class="outcomes">' + c.outcomes.slice(0, 3).map(function (o) {
+      return '<li>' + esc(tx(o)) + '</li>';
+    }).join('') + '</ul>' +
+    (c.kind === 'sample' ? '<p class="sample-note">' + esc(t('c.sampleNote')) + '</p>' : '') +
+    '<div class="actions">' +
+      '<a class="btn btn-yellow btn-block" href="#/course/' + c.id + '">' + esc(t('c.register')) + '</a>' +
+      '<a class="btn btn-ghost btn-block" href="#/course/' + c.id + '">' + esc(t('c.details')) + '</a>' +
+    '</div></article>';
+}
+function renderHomeDynamic() {
+  var grid = document.getElementById('homeCourses');
+  if (grid) grid.innerHTML = COURSES.map(courseCardHTML).join('');
+  var foot = document.getElementById('footCourses');
+  if (foot) foot.innerHTML = COURSES.map(function (c) {
+    return '<li><a href="#/course/' + c.id + '">' + esc(tx(c.name)) + '</a></li>';
+  }).join('');
+  var ticker = document.getElementById('ticker');
+  if (ticker) {
+    var one = REVIEWS.map(function (r) {
+      var initials = r[0].split(' ').map(function (w) { return w.charAt(0); }).join('').slice(0, 2);
+      return '<article class="tcard"><div class="stars">' + '★'.repeat(r[2]) + '☆'.repeat(5 - r[2]) + '</div>' +
+        '<p>' + esc(tx(r[3])) + '</p>' +
+        '<div class="who"><div class="av">' + esc(initials) + '</div><div><b>' + esc(r[0]) + '</b><span>' + esc(r[1]) + '</span></div></div>' +
+        '</article>';
+    }).join('');
+    ticker.innerHTML = one + one; /* duplicated for a seamless loop */
+  }
+  if (window.__fasla_reveal) window.__fasla_reveal();
+}
+
+/* ---------------- 6. ROUTER ---------------- */
+var HOME_ANCHORS = ['#hero', '#about', '#courses', '#challenge', '#placement', '#reviews', '#app', '#contact'];
+function showHome(anchor) {
+  state.view = 'home';
+  document.getElementById('home').hidden = false;
+  var v = document.getElementById('view');
+  v.hidden = true;
+  v.innerHTML = '';
+  if (anchor) {
+    var el = document.querySelector(anchor);
+    if (el) setTimeout(function () { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 20);
+    else window.scrollTo({ top: 0, behavior: 'auto' });
+  } else {
+    window.scrollTo({ top: 0, behavior: 'auto' });
+  }
+}
+function route(keepScroll) {
+  var hash = location.hash || '#hero';
+  if (hash === '#' || hash === '#/' || HOME_ANCHORS.indexOf(hash) > -1) {
+    showHome(hash === '#/' ? null : hash);
+    return;
+  }
+  var y = window.scrollY;
+  var v = document.getElementById('view');
+  document.getElementById('home').hidden = true;
+  v.hidden = false;
+  var parts = hash.replace(/^#\/?/, '').split('/');
+  var page = parts[0], arg = parts[1];
+  var html = '';
+  switch (page) {
+    case 'courses': html = viewCourses(); break;
+    case 'course': html = viewCourse(arg); break;
+    case 'register': html = viewRegister(arg); break;
+    case 'challenge': html = viewChallenge(); break;
+    case 'placement': html = viewPlacementHome(); break;
+    case 'placement-test': html = viewPlacementTest(); break;
+    case 'placement-results': html = viewPlacementResults(); break;
+    case 'privacy': html = viewLegal('privacy'); break;
+    case 'terms': html = viewLegal('terms'); break;
+    case 'refund': html = viewLegal('refund'); break;
+    default: html = viewCourses();
+  }
+  v.innerHTML = html;
+  state.view = page;
+  applyI18n(v);
+  if (keepScroll) window.scrollTo({ top: y, behavior: 'auto' });
+  else window.scrollTo({ top: 0, behavior: 'auto' });
+  if (page === 'register') initRegister(arg);
+  if (page === 'challenge') initChallenge();
+  if (page === 'placement-test') initPlacementTest();
+  if (page === 'placement') initPlacementHome();
+  if (page === 'placement-results') initPlacementResults();
+  if (window.__fasla_reveal) window.__fasla_reveal();
+}
+
+/* ---------------- 7. REVEAL + RAIL ---------------- */
+function initReveal() {
+  var io = ('IntersectionObserver' in window)
+    ? new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' })
+    : null;
+  function scan() {
+    var els = document.querySelectorAll('.rv:not(.in)');
+    for (var i = 0; i < els.length; i++) {
+      if (io) io.observe(els[i]); else els[i].classList.add('in');
+    }
+  }
+  window.__fasla_reveal = scan;
+  scan();
+}
+function initRail() {
+  var rail = document.getElementById('rail');
+  if (!rail) return;
+  var links = rail.querySelectorAll('a');
+  var secs = [];
+  for (var i = 0; i < links.length; i++) {
+    var el = document.querySelector(links[i].getAttribute('href'));
+    if (el) secs.push({ link: links[i], el: el });
+  }
+  function update() {
+    var y = window.scrollY + window.innerHeight * 0.32;
+    var active = null;
+    for (var i = 0; i < secs.length; i++) if (secs[i].el.offsetTop <= y) active = secs[i];
+    for (var j = 0; j < links.length; j++) links[j].classList.remove('is-on');
+    if (active) active.link.classList.add('is-on');
+    var dark = false;
+    if (active) {
+      var r = active.el.getBoundingClientRect();
+      dark = r.top < window.innerHeight * 0.32 && r.bottom > window.innerHeight * 0.32;
+    }
+    rail.classList.toggle('is-light', dark && (active.el.classList.contains('hero') ||
+      active.el.classList.contains('courses') || active.el.classList.contains('challenge') ||
+      active.el.classList.contains('foot')));
+    rail.style.opacity = state.view === 'home' ? '1' : '0';
+    rail.style.pointerEvents = state.view === 'home' ? 'auto' : 'none';
+  }
+  window.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
+/* ---------------- 8. BOOT ---------------- */
+document.addEventListener('DOMContentLoaded', function () {
+  var btns = document.querySelectorAll('.langbar button');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].addEventListener('click', function () {
+      setLang(this.getAttribute('data-lang'));
+    });
+  }
+  renderHomeDynamic();
+  applyI18n();
+  initReveal();
+  initRail();
+  setLang(state.lang, true);   /* apply the saved language — never force English */
+  window.addEventListener('hashchange', function () { route(false); });
+  route(false);
+});
+
+/* expose helpers used by the other modules */
+window.FASLA = {
+  state: state, t: t, tx: tx, esc: esc, money: money, setLang: setLang, flash: flash,
+  COURSES: COURSES, REVIEWS: REVIEWS, courseById: courseById, finalPrice: finalPrice,
+  DISCOUNT: DISCOUNT, route: route, applyI18n: applyI18n,
+  courseCardHTML: courseCardHTML
+};
+})();
+</script>
+<script>
+/* ============================================================
+   PAGES: courses index, course details, registration, legal
+   ============================================================ */
+(function () {
+'use strict';
+var F = window.FASLA, t = F.t, tx = F.tx, esc = F.esc, money = F.money;
+
+function pageHead(title, sub, crumb) {
+  return '<section class="page-head"><div class="wrap">' +
+    '<div class="crumb">' + crumb + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px;max-width:18ch">' + esc(title) + '</h1>' +
+    (sub ? '<p class="sub" style="margin-top:18px">' + esc(sub) + '</p>' : '') +
+    '</div></section>';
+}
+function crumbHome(extra) {
+  return '<a href="#hero">' + esc(t('foot.l1')) + '</a> &nbsp;/&nbsp; ' + esc(extra);
+}
+
+/* ---------- courses index ---------- */
+function viewCourses() {
+  return pageHead(tx(['Find Your Perfect Learning Path', 'اعثر على مسار التعلم المثالي لك']),
+    tx(['Choose your level and start building your English skills with FASLA.', 'اختر مستواك وابدأ في بناء مهاراتك في الإنجليزية مع فصلا.']),
+    crumbHome(tx(['Courses', 'الكورسات']))) +
+    '<section class="section" style="background:var(--paper)"><div class="wrap">' +
+    '<div class="course-grid" style="margin-top:0">' + F.COURSES.map(F.courseCardHTML).join('') + '</div>' +
+    '<div class="notice" style="margin-top:36px"><strong>' + esc(t('c.officialPrice')) + '</strong><br>' +
+    esc(tx(['All level prices are official FASLA prices in Egyptian Pounds (EGP) with the 50% launch discount applied automatically in the browser.',
+      'جميع أسعار المستويات هي أسعار فصلا الرسمية بالجنيه المصري مع تطبيق خصم الإطلاق 50% تلقائيًا في المتصفح.'])) + '</div>' +
+    '</div></section>';
+}
+
+/* ---------- course details ---------- */
+function viewCourse(id) {
+  var c = F.courseById(id);
+  if (!c) {
+    return pageHead(t('c.notFound'), '', crumbHome(t('c.notFound'))) +
+      '<section class="section"><div class="wrap"><a class="btn btn-navy" href="#/courses">' + esc(t('c.backCourses')) + '</a></div></section>';
+  }
+  var isContact = c.price == null;
+  var fp = F.finalPrice(c);
+  var crumb = crumbHome(tx(c.name));
+  var units = [];
+  for (var i = 0; i < (c.units || 8); i++) {
+    var topic = c.topics[i % c.topics.length];
+    units.push('<li><span class="u">' + esc(t('c.unit')) + ' ' + (i + 1 < 10 ? '0' : '') + (i + 1) + '</span>' +
+      '<span class="n">' + esc(tx(topic)) + '</span>' +
+      '<span class="c num">' + Math.max(4, Math.round((c.lessons || 64) / (c.units || 8))) + ' ' + esc(t('c.lesson')) + '</span></li>');
+  }
+  var faqs = [
+    [tx(['Who is this course for?', 'من هو هذا الكورس المناسب له؟']),
+     tx(['Anyone who wants structured, guided English progress at the ' + tx(c.level).toLowerCase() + ' level with clear outcomes and continuous assessment.',
+       'كل من يريد تقدمًا منظمًا وموجّهًا في الإنجليزية بمستوى ' + tx(c.level) + ' مع نتائج واضحة وتقييم مستمر.'])],
+    [tx(['How long does the course take?', 'كم مدة الكورس؟']),
+     isContact ? tx(['C1 is personalised, so the duration is set with you after a short consultation with FASLA.',
+       'المستوى C1 مخصص، لذا تحدد المدة معك بعد استشارة قصيرة مع فصلا.'])
+       : tx(['Approximately ' + c.days + ' days, designed to be studied in short consistent daily sessions.',
+         'حوالي ' + c.days + ' يومًا، مصمم ليُذاكر في جلسات يومية قصيرة ومنتظمة.'])],
+    [tx(['What happens after I register?', 'ماذا يحدث بعد التسجيل؟']),
+     tx(['You receive a WhatsApp confirmation from FASLA with your schedule, your starting unit and how to join your sessions.',
+       'ستصلك رسالة تأكيد عبر واتساب من فصلا بها جدولك ووحدتك الأولى وطريقة الانضمام للجلسات.'])],
+    [tx(['Is the price a one-time payment?', 'هل السعر دفعة واحدة؟']),
+     isContact ? tx(['C1 pricing is confirmed directly with FASLA based on your personalised plan.',
+       'يتم تأكيد سعر C1 مباشرة مع فصلا حسب خطتك المخصصة.'])
+       : tx(['Yes. ' + (c.kind === 'sample' ? 'This is currently a sample price and may be adjusted before enrolment opens.' : 'This is the official FASLA course price, with the 50% launch discount already applied.'),
+         'نعم. ' + (c.kind === 'sample' ? 'هذا سعر تجريبي حاليًا وقد يتم تعديله قبل فتح التسجيل.' : 'هذا هو السعر الرسمي لكورس فصلا مع خصم الإطلاق 50% مطبق بالفعل.')])],
+    [tx(['Do I get a certificate?', 'هل أحصل على شهادة؟']),
+     tx(['Yes, FASLA issues a completion certificate showing your achieved level and skills covered.',
+       'نعم، تصدر فصلا شهادة إتمام توضح المستوى الذي وصلت إليه والمهارات التي غطيتها.'])]
+  ];
+  return pageHead(tx(c.name), tx(c.desc), crumb) +
+    '<section class="section" style="padding-top:clamp(38px,5vw,64px)"><div class="wrap">' +
+    '<div class="res-grid">' +
+      '<div class="res-cell"><span>' + esc(t('c.level')) + '</span><b>' + esc(tx(c.level)) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('c.duration')) + '</span><b class="num">' +
+        (isContact ? esc(t('c.durationCustom')) : c.days + ' ' + esc(t('c.days'))) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('c.units')) + '</span><b class="num">' + (isContact ? '—' : c.units) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('c.lessons')) + '</span><b class="num">' + (isContact ? '—' : c.lessons) + '</b></div>' +
+    '</div>' +
+
+    '<h2 style="margin-top:clamp(42px,6vw,72px)">' + esc(t('c.outcomesTitle')) + '</h2>' +
+    '<div class="prose"><ul>' + c.outcomes.map(function (o) { return '<li>' + esc(tx(o)) + '</li>'; }).join('') + '</ul></div>' +
+
+    '<h2 style="margin-top:clamp(42px,6vw,72px)">' + esc(t('c.skillsTitle')) + '</h2>' +
+    '<div class="levels" style="margin-top:18px">' + c.topics.map(function (tp) {
+      return '<li style="color:var(--gold);border-color:var(--line-gold)">' + esc(tx(tp)) + '</li>';
+    }).join('') + '</div>' +
+
+    '<h2 style="margin-top:clamp(42px,6vw,72px)">' + esc(t('c.curriculumTitle')) + '</h2>' +
+    '<ul class="curric" style="margin-top:18px;border-top:1px solid var(--line)">' + units.join('') + '</ul>' +
+
+    '<h2 style="margin-top:clamp(42px,6vw,72px)">' + esc(t('c.pricingTitle')) + '</h2>' +
+    '<div class="panel" style="margin-top:18px">' +
+      (isContact
+        ? '<div class="ledger" style="border:0;padding:0"><span class="contact-price" style="font-size:2rem">' + esc(t('c.contactUs')) + '</span></div>' +
+          '<p style="margin-top:14px;color:var(--txt-soft)">' + esc(tx(['C1 is a personalised advanced program. Contact FASLA to receive your plan and confirmed price.',
+            'برنامج C1 مخصص. تواصل مع فصلا للحصول على خطتك والسعر المؤكد.'])) + '</p>'
+        : '<div class="ledger" style="border:0;padding:0">' +
+            '<span class="old num">' + esc(t('c.egp')) + ' ' + money(c.price) + '</span>' +
+            '<span class="new num">' + esc(t('c.egp')) + ' ' + money(fp) + '</span>' +
+            '<span class="off-note">' + esc(t('c.off')) + ' · ' + esc(t('c.limited')) + '</span></div>' +
+          (c.kind === 'sample'
+            ? '<p class="sample-note" style="margin-top:14px">' + esc(t('c.sampleNote')) + '</p>'
+            : '<p style="margin-top:14px;color:var(--txt-soft)">' + esc(t('c.officialPrice')) + ' — ' +
+              esc(tx(['calculated automatically: ' + money(c.price) + ' EGP minus 50%.', 'يُحسب تلقائيًا: ' + money(c.price) + ' جنيهًا ناقص 50%.'])) + '</p>')) +
+      '<div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:12px">' +
+        '<a class="btn btn-yellow" href="#/register/' + c.id + '">' + esc(t('c.enrollNow')) + '</a>' +
+        '<a class="btn btn-ghost" href="#/courses">' + esc(t('c.backCourses')) + '</a>' +
+      '</div>' +
+    '</div>' +
+
+    '<h2 style="margin-top:clamp(42px,6vw,72px)">' + esc(t('c.faqTitle')) + '</h2>' +
+    '<div class="faq" style="margin-top:18px">' + faqs.map(function (f, i) {
+      return '<details' + (i === 0 ? ' open' : '') + '><summary>' + esc(f[0]) + '</summary><p>' + esc(f[1]) + '</p></details>';
+    }).join('') + '</div>' +
+
+    '<div class="pricebar">' +
+      (isContact
+        ? '<div class="p"><b>' + esc(t('c.contactUs')) + '</b></div>'
+        : '<div class="p"><span class="old num" style="text-decoration:line-through;color:#8A8FA0">' + esc(t('c.egp')) + ' ' + money(c.price) + '</span>' +
+          '<b class="num">' + esc(t('c.egp')) + ' ' + money(fp) + '</b>' +
+          '<span class="off-note">' + esc(t('c.off')) + '</span></div>') +
+      '<a class="btn btn-yellow" style="margin-inline-start:auto" href="#/register/' + c.id + '">' + esc(t('c.register')) + '</a>' +
+    '</div>' +
+    '</div></section>';
+}
+
+/* ---------- registration ---------- */
+var GOVS = [
+  ['Cairo','القاهرة'], ['Giza','الجيزة'], ['Alexandria','الإسكندرية'], ['Qalyubia','القليوبية'],
+  ['Sharqia','الشرقية'], ['Dakahlia','الدقهلية'], ['Beheira','البحيرة'], ['Kafr El Sheikh','كفر الشيخ'],
+  ['Gharbia','الغربية'], ['Monufia','المنوفية'], ['Damietta','دمياط'], ['Port Said','بورسعيد'],
+  ['Ismailia','الإسماعيلية'], ['Suez','السويس'], ['Fayoum','الفيوم'], ['Beni Suef','بني سويف'],
+  ['Minya','المنيا'], ['Assiut','أسيوط'], ['Sohag','سوهاج'], ['Qena','قنا'], ['Luxor','الأقصر'],
+  ['Aswan','أسوان'], ['Red Sea','البحر الأحمر'], ['New Valley','الوادي الجديد'],
+  ['Matrouh','مطروح'], ['North Sinai','شمال سيناء'], ['South Sinai','جنوب سيناء']
+];
+function opts(list, selected) {
+  return list.map(function (o) {
+    var val = Array.isArray(o) ? o[0] : o;
+    var lab = Array.isArray(o) ? (F.state.lang === 'ar' && o[1] ? o[1] : o[0]) : o;
+    return '<option value="' + esc(val) + '"' + (val === selected ? ' selected' : '') + '>' + esc(lab) + '</option>';
+  }).join('');
+}
+function field(id, label, type, extra) {
+  extra = extra || {};
+  return '<div class="field' + (extra.full ? ' full' : '') + '" data-field="' + id + '">' +
+    '<label for="f_' + id + '">' + esc(label) + (extra.optional ? ' <span class="opt">(' + esc(t('r.optional')) + ')</span>' : '') + '</label>' +
+    (type === 'textarea'
+      ? '<textarea id="f_' + id + '" name="' + id + '" placeholder="' + esc(extra.ph || '') + '"></textarea>'
+      : type === 'select'
+        ? '<select id="f_' + id + '" name="' + id + '"><option value="">—</option>' + opts(extra.options || [], extra.selected) + '</select>'
+        : '<input id="f_' + id + '" name="' + id + '" type="' + type + '" value="' + esc(extra.value || '') + '" placeholder="' + esc(extra.ph || '') + '"' +
+          (extra.min != null ? ' min="' + extra.min + '"' : '') + (extra.max != null ? ' max="' + extra.max + '"' : '') + '>') +
+    (extra.hint ? '<div class="hint">' + esc(extra.hint) + '</div>' : '') +
+    '<div class="msg">' + esc(extra.err || t('r.errReq')) + '</div></div>';
+}
+function viewRegister(courseId) {
+  var c = F.courseById(courseId);
+  var pre = c ? c.id : '';
+  return pageHead(t('r.title'), t('r.sub'), crumbHome(t('r.title'))) +
+  '<section class="section" style="padding-top:clamp(32px,4vw,56px)"><div class="wrap">' +
+    '<div class="notice"><strong>' + esc(t('r.courseAuto')) + '</strong><br>' +
+      esc(tx(['Register Now buttons across the site open this form with your course already selected.',
+        'أزرار "سجّل الآن" في الموقع تفتح هذا النموذج والكورس المختار محدد بالفعل.'])) + '</div>' +
+    '<form id="regForm" novalidate>' +
+
+    '<div class="formset"><h3>01 · ' + esc(t('r.sec1')) + '</h3><div class="form-grid" style="margin-top:22px">' +
+      field('fullName', t('r.fullName'), 'text', { ph: tx(['e.g. Mariam Adel Hassan', 'مثال: مريم عادل حسن']) }) +
+      field('dob', t('r.dob'), 'date', {}) +
+      field('age', t('r.age'), 'number', { min: 5, max: 99, err: t('r.errAge') }) +
+      field('gender', t('r.gender'), 'select', { options: [[tx(['Male','ذكر']), tx(['Male','ذكر'])], [tx(['Female','أنثى']), tx(['Female','أنثى'])], [tx(['Prefer not to say','أفضل عدم الإجابة']), tx(['Prefer not to say','أفضل عدم الإجابة'])]] }) +
+      field('gov', t('r.gov'), 'select', { options: GOVS }) +
+      field('city', t('r.city'), 'text', { ph: tx(['e.g. Nasr City', 'مثال: مدينة نصر']) }) +
+    '</div></div>' +
+
+    '<div class="formset"><h3>02 · ' + esc(t('r.sec2')) + '</h3><div class="form-grid" style="margin-top:22px">' +
+      field('wa', t('r.wa'), 'tel', { ph: '01xxxxxxxxx', err: t('r.errPhone') }) +
+      field('alt', t('r.alt'), 'tel', { optional: true, ph: '01xxxxxxxxx', err: t('r.errPhone') }) +
+      field('email', t('r.email'), 'email', { ph: 'name@example.com', err: t('r.errEmail') }) +
+    '</div></div>' +
+
+    '<div class="formset"><h3>03 · ' + esc(t('r.sec3')) + '</h3><div class="form-grid" style="margin-top:22px">' +
+      field('school', t('r.school'), 'text', { optional: true }) +
+      field('faculty', t('r.faculty'), 'text', { optional: true }) +
+    '</div>' +
+    '<p class="hint" style="margin-top:14px">' +
+      esc(tx(['Optional fields — you can register without a school, a faculty or an academic year.',
+        'حقول اختيارية — يمكنك التسجيل بدون مدرسة أو كلية أو سنة دراسية.'])) + '</p></div>' +
+
+    '<div class="formset"><h3>04 · ' + esc(t('r.sec4')) + '</h3><div class="form-grid" style="margin-top:22px">' +
+      field('course', t('r.course'), 'select', { options: F.COURSES.map(function (x) { return [x.id, tx(x.name)]; }), selected: pre }) +
+      field('schedule', t('r.schedule'), 'select', { options: [
+        [tx(['Morning (9am – 2pm)','صباحًا (9 – 2)']), tx(['Morning (9am – 2pm)','صباحًا (9 – 2)'])],
+        [tx(['Afternoon (2pm – 6pm)','بعد الظهر (2 – 6)']), tx(['Afternoon (2pm – 6pm)','بعد الظهر (2 – 6)'])],
+        [tx(['Evening (6pm – 10pm)','مساءً (6 – 10)']), tx(['Evening (6pm – 10pm)','مساءً (6 – 10)'])],
+        [tx(['Weekends only','نهاية الأسبوع فقط']), tx(['Weekends only','نهاية الأسبوع فقط'])],
+        [tx(['Flexible / to be agreed','مرن / يُحدد لاحقًا']), tx(['Flexible / to be agreed','مرن / يُحدد لاحقًا'])]] }) +
+      field('levelNow', t('r.levelNow'), 'select', { options: ['A1','A2','B1','B2','C1', tx(['Not sure yet','غير متأكد بعد']), tx(['Complete beginner','مبتدئ تمامًا'])] }) +
+      field('prev', t('r.prev'), 'text', { optional: true }) +
+      field('goals', t('r.goals'), 'textarea', { full: true, optional: true, ph: tx(['e.g. university, work, travel, IELTS…', 'مثال: الجامعة، العمل، السفر، IELTS…']) }) +
+    '</div></div>' +
+
+    '<div class="formset"><h3>05 · ' + esc(t('r.sec5')) + '</h3><div class="form-grid" style="margin-top:22px">' +
+      field('why', t('r.why'), 'textarea', { full: true, optional: true }) +
+      field('hard', t('r.hard'), 'textarea', { full: true, optional: true }) +
+      field('notes', t('r.notes'), 'textarea', { full: true, optional: true }) +
+    '</div>' +
+    '<p class="hint" style="margin-top:14px">' +
+      esc(tx(['Everything in this section is optional. You can submit your registration without answering any of it.',
+        'كل ما في هذا القسم اختياري. يمكنك إرسال تسجيلك دون الإجابة عن أي منه.'])) + '</p></div>' +
+
+    '<div class="formset"><h3>' + esc(t('r.review')) + '</h3>' +
+      '<div class="check"><input type="checkbox" id="okPrivacy"><label for="okPrivacy">' + esc(t('r.agreePrivacy')) +
+        ' <a href="#/privacy">' + esc(t('foot.priv')) + '</a></label></div>' +
+      '<div class="check"><input type="checkbox" id="okTerms"><label for="okTerms">' + esc(t('r.agreeTerms')) +
+        ' <a href="#/terms">' + esc(t('foot.terms')) + '</a></label></div>' +
+      '<p class="hint" style="margin-top:12px">' + esc(t('r.consentNote')) + '</p>' +
+      '<div class="msg" id="consentMsg" style="display:none;color:#C62828;font-size:.82rem;font-weight:600;margin-top:10px">' + esc(t('r.errCheck')) + '</div>' +
+      '<div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:12px">' +
+        '<button type="submit" class="btn btn-yellow">' + esc(t('r.submitBtn')) + '</button>' +
+        '<a class="btn btn-ghost" href="#/courses">' + esc(t('c.backCourses')) + '</a>' +
+      '</div>' +
+    '</div></form>' +
+  '</div></section>';
+}
+
+/* registration behaviour + validation + WhatsApp report */
+function initRegister(courseId) {
+  var form = document.getElementById('regForm');
+  if (!form) return;
+  /* restore draft */
+  try {
+    var draft = JSON.parse(localStorage.getItem('fasla_reg_draft') || 'null');
+    if (draft) {
+      Object.keys(draft).forEach(function (k) {
+        var el = form.elements[k];
+        if (el && !el.value) el.value = draft[k];
+      });
+    }
+    if (courseId) form.elements.course.value = courseId;
+  } catch (e) {}
+
+  form.addEventListener('input', function () {
+    var data = {};
+    for (var i = 0; i < form.elements.length; i++) {
+      var el = form.elements[i];
+      if (el.name && el.value) data[el.name] = el.value;
+    }
+    try { localStorage.setItem('fasla_reg_draft', JSON.stringify(data)); } catch (e) {}
+  });
+
+  function fail(name, on) {
+    var box = form.querySelector('[data-field="' + name + '"]');
+    if (box) box.classList.toggle('err', !!on);
+    return !on;
+  }
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var e = form.elements, ok = true;
+    ok = fail('fullName', !e.fullName.value.trim()) && ok;
+    ok = fail('dob', !e.dob.value) && ok;
+    var age = parseInt(e.age.value, 10);
+    ok = fail('age', !(age >= 5 && age <= 99)) && ok;
+    ok = fail('gender', !e.gender.value) && ok;
+    ok = fail('gov', !e.gov.value) && ok;
+    ok = fail('city', !e.city.value.trim()) && ok;
+    ok = fail('wa', !/^01[0-2,5]{1}[0-9]{8}$/.test(e.wa.value.replace(/\s/g, ''))) && ok;
+    if (e.alt.value.trim()) ok = fail('alt', !/^01[0-2,5]{1}[0-9]{8}$/.test(e.alt.value.replace(/\s/g, ''))) && ok;
+    ok = fail('email', !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e.email.value.trim())) && ok;
+    ok = fail('course', !e.course.value) && ok;
+    ok = fail('schedule', !e.schedule.value) && ok;
+    ok = fail('levelNow', !e.levelNow.value) && ok;
+    var consent = e.form ? true : true;
+    var priv = document.getElementById('okPrivacy').checked;
+    var terms = document.getElementById('okTerms').checked;
+    document.getElementById('consentMsg').style.display = (priv && terms) ? 'none' : 'block';
+    if (!(priv && terms)) ok = false;
+    if (!ok) {
+      var firstErr = form.querySelector('.field.err, #consentMsg[style*="block"]');
+      if (firstErr && firstErr.scrollIntoView) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    var vals = {};
+    for (var i = 0; i < e.length; i++) if (e[i].name) vals[e[i].name] = e[i].value;
+    showRegistrationDone(vals);
+  });
+}
+
+function showRegistrationDone(v) {
+  var c = F.courseById(v.course);
+  var rows = [
+    [t('r.fullName'), v.fullName], [t('r.dob'), v.dob], [t('r.age'), v.age], [t('r.gender'), v.gender],
+    [t('r.gov'), v.gov], [t('r.city'), v.city], [t('r.wa'), v.wa], [t('r.alt'), v.alt || '—'],
+    [t('r.email'), v.email], [t('r.school'), v.school || '—'], [t('r.faculty'), v.faculty || '—'],
+    [t('r.course'), c ? tx(c.name) : (v.course || '—')], [t('r.schedule'), v.schedule],
+    [t('r.levelNow'), v.levelNow], [t('r.prev'), v.prev || '—'], [t('r.goals'), v.goals || '—'],
+    [t('r.why'), v.why || '—'], [t('r.hard'), v.hard || '—'], [t('r.notes'), v.notes || '—']
+  ];
+  var nl = '\n';
+  var report = [
+    '📋 ' + t('r.waTitle'),
+    '——————————————————',
+    t('r.fullName') + ': ' + v.fullName,
+    t('r.dob') + ': ' + v.dob, t('r.age') + ': ' + v.age, t('r.gender') + ': ' + v.gender,
+    t('r.gov') + ': ' + v.gov, t('r.city') + ': ' + v.city,
+    t('r.wa') + ': ' + v.wa, t('r.alt') + ': ' + (v.alt || '—'), t('r.email') + ': ' + v.email,
+    t('r.school') + ': ' + (v.school || '—'), t('r.faculty') + ': ' + (v.faculty || '—'),
+    t('r.course') + ': ' + (c ? tx(c.name) : v.course),
+    t('r.schedule') + ': ' + v.schedule, t('r.levelNow') + ': ' + v.levelNow,
+    t('r.prev') + ': ' + (v.prev || '—'), t('r.goals') + ': ' + (v.goals || '—'),
+    t('r.why') + ': ' + (v.why || '—'), t('r.hard') + ': ' + (v.hard || '—'),
+    t('r.notes') + ': ' + (v.notes || '—'),
+    '——————————————————',
+    'FASLA · fasla.english.ceo@gmail.com'
+  ].join(nl);
+  var waURL = 'https://wa.me/201201847164?text=' + encodeURIComponent(report);
+  var mail = 'mailto:fasla.english.ceo@gmail.com?subject=' + encodeURIComponent(t('r.waTitle') + ' — ' + v.fullName) +
+    '&body=' + encodeURIComponent(report);
+  try { localStorage.setItem('fasla_reg_last', JSON.stringify({ v: v, at: Date.now() })); localStorage.removeItem('fasla_reg_draft'); } catch (e) {}
+
+  var v2 = document.getElementById('view');
+  v2.innerHTML =
+    '<section class="page-head"><div class="wrap"><div class="crumb">' + crumbHome(t('r.title')) + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px">' + esc(t('r.doneTitle')) + '</h1></div></section>' +
+    '<section class="section"><div class="wrap" style="max-width:920px">' +
+    '<div class="done-mark">✓</div>' +
+    '<p class="sub" style="margin-inline:auto;text-align:center">' + esc(t('r.doneMsg')) + '</p>' +
+    '<div class="panel" style="margin-top:30px"><h3>' + esc(t('r.review')) + '</h3>' +
+    '<table class="review-table"><tbody>' + rows.map(function (r) {
+      return '<tr><td>' + esc(r[0]) + '</td><td>' + esc(r[1] || '—') + '</td></tr>';
+    }).join('') + '</tbody></table>' +
+    '<div style="margin-top:26px;display:flex;flex-wrap:wrap;gap:12px">' +
+      '<a class="btn btn-yellow" href="' + waURL + '" target="_blank" rel="noopener">' + esc(t('r.openWa')) + '</a>' +
+      '<a class="btn btn-ghost" href="' + mail + '">' + esc(t('r.sendEmail')) + '</a>' +
+      '<a class="btn btn-navy" href="#hero">' + esc(t('q.backHome')) + '</a>' +
+    '</div>' +
+    '<p class="hint" style="margin-top:14px">' + esc(t('p.waHint')) + '</p>' +
+    '</div></div></section>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ---------- legal pages ---------- */
+function viewLegal(kind) {
+  var title = t('lg.' + kind + 'Title');
+  var body = {
+    privacy: [
+      ['h', tx(['What we collect','ما الذي نجمعه'])],
+      ['p', tx(['FASLA collects only the information you enter yourself: your name, age, governorate, contact details, your chosen course and the answers you give in the placement test and registration form.',
+        'تجمع فصلا فقط المعلومات التي تدخلها بنفسك: اسمك وعمرك ومحافظتك وبيانات التواصل والكورس المختار وإجاباتك في اختبار تحديد المستوى ونموذج التسجيل.'])],
+      ['h', tx(['Where it is stored','أين تُحفظ'])],
+      ['p', tx(['This is a front-end website with no database server. Your language preference, form drafts and test progress are stored locally in your own browser (localStorage). Nothing is uploaded to a FASLA server by this website.',
+        'هذا موقع أمامي بدون قاعدة بيانات. تُحفظ تفضيلات اللغة ومسودات النماذج وتقدم الاختبار محليًا في متصفحك (localStorage). ولا يرفع هذا الموقع أي بيانات إلى خادم فصلا.'])],
+      ['h', tx(['WhatsApp and email','واتساب والبريد الإلكتروني'])],
+      ['p', tx(['When you submit a registration or a test result, the website prepares a report and opens WhatsApp or your email application. Nothing is sent automatically — you press send yourself.',
+        'عند إرسال التسجيل أو نتيجة الاختبار، يجهّز الموقع تقريرًا ويفتح واتساب أو تطبيق البريد. ولا يُرسل شيء تلقائيًا — أنت من يضغط إرسال.'])],
+      ['h', tx(['Your rights','حقوقك'])],
+      ['p', tx(['You can clear your data at any time from your browser settings, or contact FASLA at fasla.english.ceo@gmail.com to request deletion of information you sent us.',
+        'يمكنك مسح بياناتك في أي وقت من إعدادات المتصفح، أو التواصل مع فصلا على fasla.english.ceo@gmail.com لطلب حذف المعلومات التي أرسلتها.'])]
+    ],
+    terms: [
+      ['h', tx(['Enrolment','الالتحاق'])],
+      ['p', tx(['Registration through this website is a request to enrol. Your place is confirmed only after FASLA contacts you on WhatsApp with your schedule.',
+        'التسجيل عبر هذا الموقع هو طلب التحاق. تُؤكد مقعدك فقط بعد تواصل فصلا معك عبر واتساب بجدولك.'])],
+      ['h', tx(['Prices and offers','الأسعار والعروض'])],
+      ['p', tx(['All prices are in Egyptian Pounds. Level course prices are official FASLA prices with the 50% launch discount applied automatically. Courses marked as sample price are indicative and are confirmed before payment.',
+        'جميع الأسعار بالجنيه المصري. أسعار كورسات المستويات هي أسعار فصلا الرسمية مع خصم الإطلاق 50% مطبق تلقائيًا. أما الكورسات المحددة بسعر تجريبي فهي استرشادية وتُؤكد قبل الدفع.'])],
+      ['h', tx(['Attendance and conduct','الحضور والسلوك'])],
+      ['p', tx(['Learners agree to attend sessions regularly, complete assigned work and treat teachers and fellow learners with respect.',
+        'يلتزم المتعلمون بحضور الجلسات بانتظام وإنجاز الأعمال المطلوبة واحترام المدرسين وزملاء التعلم.'])],
+      ['h', tx(['Intellectual property','الملكية الفكرية'])],
+      ['p', tx(['FASLA lesson materials are for enrolled learners only and may not be redistributed or resold.',
+        'مواد دروس فصلا للمسجلين فقط، ولا يجوز إعادة توزيعها أو بيعها.'])]
+    ],
+    refund: [
+      ['h', tx(['Before the course starts','قبل بدء الكورس'])],
+      ['p', tx(['You may request a full refund before your first session begins, provided the request reaches FASLA in writing.',
+        'يمكنك طلب استرجاع كامل قبل بدء أول جلسة، بشرط أن يصل الطلب إلى فصلا كتابةً.'])],
+      ['h', tx(['After the course starts','بعد بدء الكورس'])],
+      ['p', tx(['Once sessions have begun, refunds are calculated on the number of completed units. Completed units are not refundable.',
+        'بعد بدء الجلسات، يُحسب الاسترجاع على الوحدات المكتملة. والوحدات المكتملة غير قابلة للاسترجاع.'])],
+      ['h', tx(['How to request','كيف تطلب'])],
+      ['p', tx(['Send your full name, the course name, your WhatsApp number and the reason for the request to fasla.english.ceo@gmail.com or on WhatsApp at 01201847164. Requests are processed within 7 working days.',
+        'أرسل اسمك الكامل واسم الكورس ورقم واتساب وسبب الطلب إلى fasla.english.ceo@gmail.com أو عبر واتساب على 01201847164. وتُعالج الطلبات خلال 7 أيام عمل.'])],
+      ['h', tx(['Non-refundable cases','حالات عدم الاسترجاع'])],
+      ['p', tx(['Materials already delivered, one-to-one sessions already attended and discounted exam bookings are not refundable.',
+        'المواد المسلَّمة بالفعل والجلسات الفردية الحاضرة وحجوزات الاختبارات المخفضة غير قابلة للاسترجاع.'])]
+    ]
+  }[kind];
+  return pageHead(title, t('lg.updated'), crumbHome(title)) +
+    '<section class="section"><div class="wrap"><div class="prose">' +
+    body.map(function (b) { return b[0] === 'h' ? '<h2>' + esc(b[1]) + '</h2>' : '<p>' + esc(b[1]) + '</p>'; }).join('') +
+    '<div style="margin-top:36px;display:flex;flex-wrap:wrap;gap:12px">' +
+      '<a class="btn btn-navy" href="#hero">' + esc(t('lg.back')) + '</a>' +
+      '<a class="btn btn-ghost" href="https://wa.me/201201847164" target="_blank" rel="noopener">' + esc(t('foot.wa')) + '</a>' +
+    '</div></div></div></section>';
+}
+
+/* share with other modules */
+window.FASLA_PAGES = {
+  pageHead: pageHead, crumbHome: crumbHome, courseCardHTML: window.__courseCardHTML,
+  GOVS: GOVS, field: field
+};
+window.viewCourses = viewCourses;
+window.viewCourse = viewCourse;
+window.viewRegister = viewRegister;
+window.viewLegal = viewLegal;
+window.initRegister = initRegister;
+})();
+</script>
+<script>
+/* ============================================================
+   SEVEN-QUESTION ENGLISH CHALLENGE
+   Types: multiple choice, fill in the blank, arrange words,
+   matching, error detection, scrambled letters, write a sentence.
+   ============================================================ */
+(function () {
+'use strict';
+var F = window.FASLA, t = F.t, tx = F.tx, esc = F.esc;
+
+var CH = [
+  { type:'m', skill:['Grammar','القواعد'],
+    q:['Which sentence is grammatically correct?','أي جملة صحيحة نحوياً؟'],
+    opts:[["He don't like coffee.",'هو لا يحب القهوة.'],["He doesn't likes coffee.",'هو لا يحب القهوة.'],
+          ["He doesn't like coffee.",'هو لا يحب القهوة.'],["He not like coffee.",'هو لا يحب القهوة.']],
+    a:2,
+    sol:['After "he / she / it" we use "does not" + the base verb: doesn\'t like.','بعد He/She/It نستخدم does not مع الفعل الأساسي: doesn\'t like.'] },
+
+  { type:'f', skill:['Grammar','القواعد'],
+    q:['Fill in the blank: If I ___ more time, I would travel the world.','أكمل الفراغ: لو أن لديّ وقت ___ لسافرت حول العالم.'],
+    ans:['had','had more time'],
+    sol:['Second conditional: If + past simple, would + base verb → "If I had more time".','الجملة الشرطية الثانية: If + ماضي بسيط، would + فعل أساسي → If I had more time.'] },
+
+  { type:'a', skill:['Writing','الكتابة'],
+    q:['Arrange the words into a correct sentence.','رتّب الكلمات لتكوين جملة صحيحة.'],
+    words:[["I",'أنا'],["am",'أكون'],["looking",'أتطلع'],["forward",'للأمام'],["to",'إلى'],["hearing",'سماع'],["from",'من'],["you",'ك']],
+    sol:['"I am looking forward to hearing from you." — after "look forward to" we use the -ing form.','الترتيب الصحيح: I am looking forward to hearing from you، وبعد look forward to نستخدم صيغة ing.'] },
+
+  { type:'k', skill:['Vocabulary','المفردات'],
+    q:['Match each word with its meaning.','طابق كل كلمة مع معناها.'],
+    pairs:[["borrow",'Take something and return it later','تأخذ شيئاً وتعوده لاحقاً'],
+           ["lend",'Give something and get it back later','تمنح شيئاً وتستعيده لاحقاً'],
+           ["rent",'Pay to use something for a period','تدفع لاستخدام شيء لفترة']],
+    sol:['Borrow = take, lend = give, rent = pay to use.','borrow = تأخذ، lend = تمنح، rent = تدفع مقابل الاستخدام.'] },
+
+  { type:'e', skill:['Grammar','القواعد'],
+    q:['Find the grammatical mistake in the sentence: "She don\'t like coffee."','اكتشف الخطأ النحوي: "She don\'t like coffee."'],
+    opts:[['She','She'],['don\'t','don\'t'],['like','like'],['coffee','coffee']],
+    a:1,
+    sol:['"She" is third person singular, so it takes "doesn\'t".','الضمير She مفرد غائب، لذلك يأخذ doesn\'t.'] },
+
+  { type:'s', skill:['Spelling','الإملاء'],
+    q:['Rearrange the scrambled letters into a real word.','أعد ترتيب الحروف المبعثرة لتكوين كلمة صحيحة.'],
+    letters:'NOIDFNECCE',
+    ans:['confidence'],
+    sol:['The word is "confidence" — the belief in your own abilities.','الكلمة هي confidence وتعني الثقة في قدراتك.'] },
+
+  { type:'w', skill:['Writing','الكتابة'],
+    q:['Write one sentence using the word "although".','اكتب جملة واحدة تستخدم فيها كلمة "although".'],
+    kw:['although'], minWords:4,
+    sol:['Example: "Although it was raining, we continued the match." — "although" connects a contrast.','مثال: Although it was raining, we continued the match — تربط although بين تناقضين.'] }
+];
+
+var state = { i:0, answers:new Array(CH.length), started:false };
+var TYPEKEY = { m:'q.type_m', f:'q.type_f', a:'q.type_a', k:'q.type_k', e:'q.type_e', s:'q.type_s', w:'q.type_w', l:'q.type_l' };
+
+function viewChallenge() {
+  return '<section class="page-head"><div class="wrap">' +
+    '<div class="crumb">' + window.FASLA_PAGES.crumbHome(t('ch.title')) + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px;max-width:16ch">' + esc(t('ch.title')) + '</h1>' +
+    '<p class="sub" style="margin-top:18px">' + esc(t('ch.sub')) + '</p></div></section>' +
+    '<section class="section" style="background:var(--navy-deep);color:#fff">' +
+    '<div class="wrap quiz-shell" id="chShell"></div></section>';
+}
+
+function initChallenge() {
+  state = { i:0, answers:new Array(CH.length), started:false };
+  renderStart();
+}
+function renderStart() {
+  var el = document.getElementById('chShell');
+  if (!el) return;
+  el.innerHTML = '<div class="panel" style="text-align:center">' +
+    '<h3 style="font-size:clamp(1.5rem,3.4vw,2.15rem)">' + esc(t('ch.title')) + '</h3>' +
+    '<p class="sub" style="margin:16px auto 0;text-align:center">' + esc(t('ch.sub')) + '</p>' +
+    '<div class="levels" style="justify-content:center;margin-top:22px">' +
+      CH.map(function (c) { return '<li>' + esc(t(TYPEKEY[c.type])) + '</li>'; }).join('') + '</div>' +
+    '<button class="btn btn-yellow" id="chStart" style="margin-top:28px;min-width:230px">' + esc(t('q.start')) + '</button>' +
+    '</div>';
+  document.getElementById('chStart').addEventListener('click', function () {
+    state.started = true; state.i = 0; renderQ();
+  });
+}
+function renderQ() {
+  var el = document.getElementById('chShell');
+  if (!el) return;
+  var c = CH[state.i], n = state.i + 1, pct = (n - 1) / CH.length * 100;
+  var body = '';
+  if (c.type === 'm' || c.type === 'e') {
+    body = '<div class="opts">' + c.opts.map(function (o, i) {
+      return '<button class="opt' + (state.answers[state.i] === i ? ' sel' : '') + '" data-i="' + i + '">' +
+        '<span class="k">' + 'ABCDEF'.charAt(i) + '</span><span>' + esc(tx(o)) + '</span></button>';
+    }).join('') + '</div>';
+  } else if (c.type === 'f' || c.type === 's' || c.type === 'w') {
+    body = (c.type === 's' ? '<div class="chips"><span class="chip slot">' + esc(c.letters.split('').join(' · ')) + '</span></div>' : '') +
+      '<div class="field full" style="margin-top:18px"><label for="chInput">' + esc(t('q.writeHere')) + '</label>' +
+      (c.type === 'w'
+        ? '<textarea id="chInput" rows="4">' + esc(state.answers[state.i] || '') + '</textarea>'
+        : '<input id="chInput" type="text" value="' + esc(state.answers[state.i] || '') + '">') +
+      '</div>';
+  } else if (c.type === 'a') {
+    var used = state.answers[state.i] || [];
+    body = '<p class="hint" style="margin-top:14px">' + esc(t('q.wordsBox')) + ' · ' + esc(t('q.tapToRemove')) + '</p>' +
+      '<div class="answer-line" id="chLine">' + (used.length
+        ? used.map(function (w, i) { return '<button class="chip" data-out="' + i + '">' + esc(w) + '</button>'; }).join('')
+        : '<span class="hint">' + esc(t('q.wordsBox')) + '</span>') + '</div>' +
+      '<div class="chips">' + c.words.map(function (w, i) {
+        return '<button class="chip' + (used.indexOf(tx(w)) > -1 ? ' used' : '') + '" data-in="' + i + '">' + esc(tx(w)) + '</button>';
+      }).join('') + '</div>';
+  } else if (c.type === 'k') {
+    var sel = state.answers[state.i] || {};
+    body = '<p class="hint" style="margin-top:14px">' + esc(t('q.matchPrompt')) + '</p>' +
+      c.pairs.map(function (p, i) {
+        return '<div class="match-row"><div style="font-family:var(--display);font-weight:600">' + esc(p[0]) + '</div>' +
+          '<div class="arrow">→</div>' +
+          '<div class="field"><select data-match="' + i + '"><option value="">—</option>' +
+          c.pairs.map(function (p2, j) {
+            return '<option value="' + j + '"' + (String(sel[i]) === String(j) ? ' selected' : '') + '>' + esc(p2[1]) + '</option>';
+          }).join('') + '</select></div></div>';
+      }).join('');
+  }
+  el.innerHTML =
+    '<div class="qbar" style="color:#fff">' +
+      '<div><div class="eyebrow">' + esc(t('q.question')) + ' ' + n + ' ' + esc(t('q.of')) + ' ' + CH.length + '</div></div>' +
+      '<div class="tagchip" style="color:var(--beige);border-color:rgba(255,255,255,.3)">' + esc(t(TYPEKEY[c.type])) + '</div>' +
+    '</div>' +
+    '<div class="qtrack"><i style="width:' + pct + '%"></i></div>' +
+    '<div class="qcard" style="margin-top:22px">' +
+      '<div class="qtype">' + esc(tx(c.skill)) + '</div>' +
+      '<h3>' + esc(tx(c.q)) + '</h3>' + body +
+      '<div class="qnav">' +
+        (state.i > 0 ? '<button class="btn btn-ghost" id="chPrev">' + esc(t('q.prev')) + '</button>' : '') +
+        (state.i < CH.length - 1
+          ? '<button class="btn btn-navy" id="chNext">' + esc(t('q.next')) + '</button>'
+          : '<button class="btn btn-yellow" id="chSubmit">' + esc(t('q.submit')) + '</button>') +
+        '<button class="btn btn-ghost" id="chSkip">' + esc(t('q.skip')) + '</button>' +
+      '</div>' +
+    '</div>';
+
+  el.querySelectorAll('.opt').forEach(function (b) {
+    b.addEventListener('click', function () { state.answers[state.i] = parseInt(b.getAttribute('data-i'), 10); renderQ(); });
+  });
+  var input = document.getElementById('chInput');
+  if (input) input.addEventListener('input', function () { state.answers[state.i] = input.value; });
+  el.querySelectorAll('[data-in]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var arr = state.answers[state.i] || [];
+      arr.push(tx(CH[state.i].words[parseInt(b.getAttribute('data-in'), 10)]));
+      state.answers[state.i] = arr; renderQ();
+    });
+  });
+  el.querySelectorAll('[data-out]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var arr = state.answers[state.i] || [];
+      arr.splice(parseInt(b.getAttribute('data-out'), 10), 1); renderQ();
+    });
+  });
+  el.querySelectorAll('[data-match]').forEach(function (s) {
+    s.addEventListener('change', function () {
+      var o = state.answers[state.i] || {};
+      o[s.getAttribute('data-match')] = s.value;
+      state.answers[state.i] = o;
+    });
+  });
+  var p = document.getElementById('chPrev'); if (p) p.addEventListener('click', function () { state.i--; renderQ(); });
+  var n2 = document.getElementById('chNext'); if (n2) n2.addEventListener('click', function () { state.i++; renderQ(); });
+  var sk = document.getElementById('chSkip'); if (sk) sk.addEventListener('click', function () {
+    if (state.i < CH.length - 1) { state.i++; renderQ(); } else submitChallenge();
+  });
+  var sb = document.getElementById('chSubmit'); if (sb) sb.addEventListener('click', submitChallenge);
+}
+
+function norm(s) {
+  return String(s || '').toLowerCase().trim().replace(/[.,!?;:'"’]/g, '').replace(/\s+/g, ' ');
+}
+function gradeChallenge(pct) {
+  if (pct >= 92) return 'A+';
+  if (pct >= 80) return 'A';
+  if (pct >= 68) return 'B';
+  if (pct >= 55) return 'C';
+  return 'D';
+}
+function submitChallenge() {
+  var correct = 0, rows = [];
+  CH.forEach(function (c, i) {
+    var given = state.answers[i], ok = false, shown = '';
+    if (c.type === 'm' || c.type === 'e') {
+      ok = given === c.a;
+      shown = given == null ? '—' : tx(c.opts[given]);
+    } else if (c.type === 'f' || c.type === 's') {
+      ok = c.ans.some(function (a) { return norm(a) === norm(given); });
+      shown = given || '—';
+    } else if (c.type === 'a') {
+      ok = norm((given || []).join(' ')) === norm(c.words.map(tx).join(' '));
+      shown = (given && given.length) ? given.join(' ') : '—';
+    } else if (c.type === 'k') {
+      var o = given || {}, all = c.pairs.every(function (p, j) { return String(o[j]) === String(j); });
+      ok = all;
+      shown = c.pairs.map(function (p, j) { return p[0] + ' → ' + (o[j] != null && o[j] !== '' ? c.pairs[Number(o[j])][1] : '—'); }).join(' · ');
+    } else if (c.type === 'w') {
+      var words = norm(given).split(' ').filter(Boolean);
+      ok = given && words.length >= (c.minWords || 4) && norm(given).indexOf(norm(c.kw[0])) > -1;
+      shown = given || '—';
+    }
+    if (ok) correct++;
+    rows.push({ c: c, ok: ok, shown: shown });
+  });
+
+  var pct = Math.round(correct / CH.length * 100);
+  var weakMap = {};
+  rows.forEach(function (r) {
+    if (!r.ok) { var s = tx(r.c.skill); weakMap[s] = (weakMap[s] || 0) + 1; }
+  });
+  var weaks = Object.keys(weakMap).sort(function (a, b) { return weakMap[b] - weakMap[a]; });
+  var recs = [];
+  if (weakMap['Grammar'] || weakMap['القواعد']) recs.push(tx(['Fix your grammar first: study one tense at a time and write five of your own sentences daily.','أصلح القواعد أولًا: ادرس زمنًا واحدًا في المرة واكتب خمس جمل من عندك يوميًا.']));
+  if (weakMap['Vocabulary'] || weakMap['المفردات']) recs.push(tx(['Build vocabulary in word families and review with spaced repetition instead of long word lists.','ابنِ المفردات بعائلات الكلمات وراجعها بتباعد زمني بدل القوائم الطويلة.']));
+  if (weakMap['Writing'] || weakMap['الكتابة']) recs.push(tx(['Write 80–100 words every day and check your sentence structure before moving on.','اكتب 80 إلى 100 كلمة يوميًا وراجع بنية الجمل قبل الانتقال.']));
+  if (weakMap['Spelling'] || weakMap['الإملاء']) recs.push(tx(['Practise spelling by writing new words three times and saying them out loud.','تدرّب على الإملاء بكتابة الكلمات الجديدة ثلاث مرات ونطقها بصوت عالٍ.']));
+  if (!recs.length) recs.push(tx(['Excellent balance across all skills — move to the next level and keep practising four times a week.','توازن ممتاز في جميع المهارات — انتقل للمستوى القادم واستمر في التدريب أربع مرات أسبوعيًا.']));
+
+  var recCourses = [];
+  if (weakMap['Grammar'] || weakMap['القواعد']) recCourses.push('grammar');
+  if (weakMap['Writing'] || weakMap['الكتابة'] || weakMap['Spelling'] || weakMap['الإملاء']) recCourses.push('b1');
+  if (weakMap['Vocabulary'] || weakMap['المفردات']) recCourses.push('a2');
+  if (!recCourses.length) recCourses.push(pct >= 85 ? 'b2' : 'b1');
+  recCourses.push('speaking');
+
+  var el = document.getElementById('chShell');
+  if (!el) return;
+  el.innerHTML =
+    '<div class="qcard"><div style="text-align:center">' +
+      '<div class="score-ring" style="--pct:' + pct + '%"><div class="val"><b class="num">' + correct + '/' + CH.length + '</b><span>' + esc(t('q.score')) + '</span></div></div>' +
+      '<h3 style="margin-top:22px">' + esc(t('q.resultTitle')) + '</h3></div>' +
+      '<div class="res-grid" style="margin-top:24px">' +
+        '<div class="res-cell"><span>' + esc(t('q.percent')) + '</span><b class="num">' + pct + '%</b><div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+        '<div class="res-cell"><span>' + esc(t('q.grade')) + '</span><b>' + gradeChallenge(pct) + '</b></div>' +
+        '<div class="res-cell"><span>' + esc(t('q.mistakes')) + '</span><b class="num">' + (CH.length - correct) + '</b></div>' +
+        '<div class="res-cell"><span>' + esc(t('q.weaknesses')) + '</span><b>' + esc(weaks.length ? weaks.join(' · ') : t('q.none')) + '</b></div>' +
+      '</div>' +
+      '<h3 style="margin-top:38px">' + esc(t('q.reviewIntro')) + '</h3>' +
+      '<div class="stack" style="margin-top:18px">' + rows.map(function (r, i) {
+        return '<div class="wrong-item' + (r.ok ? ' ok' : '') + '">' +
+          '<div class="qtype">' + esc(t('q.question')) + ' ' + (i + 1) + ' · ' + esc(t(TYPEKEY[r.c.type])) + ' · ' + esc(tx(r.c.skill)) + '</div>' +
+          '<h4 style="margin-top:8px">' + esc(tx(r.c.q)) + '</h4>' +
+          '<div class="row"><b>' + esc(t('q.yourAnswer')) + ':</b> ' + esc(r.shown) + '</div>' +
+          (r.ok ? '' : '<div class="row"><b>' + esc(t('q.correctAnswer')) + ':</b> ' + esc(correctOf(r.c)) + '</div>') +
+          '<div class="sol"><b>' + esc(t('q.solution')) + ':</b> ' + esc(tx(r.c.sol)) + '</div>' +
+        '</div>';
+      }).join('') + '</div>' +
+      '<h3 style="margin-top:38px">' + esc(t('q.recommend')) + '</h3>' +
+      '<ul class="stack" style="margin-top:16px">' + recs.map(function (r) { return '<li class="notice">' + esc(r) + '</li>'; }).join('') + '</ul>' +
+      '<h3 style="margin-top:34px">' + esc(t('q.recCourses')) + '</h3>' +
+      '<div class="stack" style="margin-top:16px">' + recCourses.map(function (id) {
+        var c = F.courseById(id);
+        return '<div class="wrong-item ok" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">' +
+          '<div style="flex:1;min-width:200px"><div class="qtype">' + esc(F.tx(c.level)) + '</div><h4 style="margin-top:6px">' + esc(F.tx(c.name)) + '</h4></div>' +
+          '<a class="btn btn-yellow btn-sm" href="#/register/' + c.id + '">' + esc(t('c.register')) + '</a>' +
+          '<a class="btn btn-ghost btn-sm" href="#/course/' + c.id + '">' + esc(t('c.details')) + '</a></div>';
+      }).join('') + '</div>' +
+      '<div class="qnav"><button class="btn btn-navy" id="chAgain">' + esc(t('q.retry')) + '</button>' +
+      '<a class="btn btn-ghost" href="#hero">' + esc(t('q.backHome')) + '</a>' +
+      '<a class="btn btn-yellow" href="#/placement">' + esc(t('pl.cta')) + '</a></div>' +
+    '</div>';
+  var again = document.getElementById('chAgain');
+  if (again) again.addEventListener('click', initChallenge);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function correctOf(c) {
+  if (c.type === 'm' || c.type === 'e') return tx(c.opts[c.a]);
+  if (c.type === 'f' || c.type === 's') return c.ans[0];
+  if (c.type === 'a') return c.words.map(tx).join(' ');
+  if (c.type === 'k') return c.pairs.map(function (p) { return p[0] + ' → ' + p[1]; }).join(' · ');
+  return c.kw.join(', ');
+}
+
+window.viewChallenge = viewChallenge;
+window.initChallenge = initChallenge;
+})();
+</script>
+<script>
+/* ============================================================
+   FREE 60-QUESTION PLACEMENT TEST
+   60 questions · A1–C1 · 2 points each = 120 · timers ·
+   localStorage persistence · WhatsApp report (manual send)
+   ============================================================ */
+(function () {
+'use strict';
+var F = window.FASLA, t = F.t, tx = F.tx, esc = F.esc;
+
+var KEY = 'fasla_placement_v1';
+var LEVELS = ['A1','A2','B1','B2','C1'];
+var SKILLS = { G:['Grammar','القواعد'], V:['Vocabulary','المفردات'], R:['Reading','القراءة'],
+               W:['Writing','الكتابة'], L:['Listening','الاستماع'], S:['Pronunciation','النطق'] };
+var TYPEKEY = { m:'q.type_m', f:'q.type_f', a:'q.type_a', k:'q.type_k', e:'q.type_e', s:'q.type_s', w:'q.type_w', l:'q.type_l' };
+
+/* --- compact question builder --- */
+function q(type, level, skill, en, ar, opts, ans, solEn, solAr) {
+  return { type:type, level:level, skill:skill, q:[en, ar], opts:opts, ans:ans, sol:[solEn, solAr] };
+}
+function P(str) { /* "en||ar;en||ar" */
+  return String(str).split(';').map(function (x) {
+    var p = x.split('||'); return [p[0], p[1] || p[0]];
+  });
+}
+var Q = [
+  /* ---------------- A1 ---------------- */
+  q('m','A1','V','I ___ from Egypt.','أنا ___ من مصر.','am||am;is||is;are||are;be||be',0,'"I" always takes "am".','الضمير I يأخذ am دائماً.'),
+  q('m','A1','G','She ___ to school every day.','هي ___ إلى المدرسة كل يوم.','go||go;goes||goes;going||going;gone||gone',1,'Third person singular takes "es": goes.','المفرد الغائب يأخذ es: goes.'),
+  q('f','A1','G','My name ___ Ahmed.','اسمي ___ أحمد.','','is','Use "am / is / are" for identity.','نستخدم am/is/are للتعريف.'),
+  q('m','A1','V','The opposite of "hot" is ___.','عكس كلمة "hot" هو ___.','cold||cold;warm||warm;big||big;fast||fast',0,'"Cold" is the opposite of "hot".','Cold هي عكس hot.'),
+  q('e','A1','G','Find the mistake: "He don\'t like tea."','اكتشف الخطأ: "He don\'t like tea."','He||He;don\'t||don\'t;like||like;tea||tea',1,'"He" takes "doesn\'t".','الضمير He يأخذ doesn\'t.'),
+  q('m','A1','G','___ you speak English?','___ تتحدث الإنجليزية؟','Do||Do;Does||Does;Is||Is;Are||Are',0,'Questions with "you" use "do".','أسئلة you تستخدم do.'),
+  q('a','A1','G','Arrange the words into a sentence.','رتّب الكلمات لتكوين جملة.','I||I;live||أعيش;in||في;Cairo||القاهرة','I live in Cairo','A simple subject + verb + place sentence.','جملة بسيطة: فاعل + فعل + مكان.'),
+  q('s','A1','V','Rearrange the letters: LOHOSC','أعد ترتيب الحروف: LOHOSC','','school','The word is "school".','الكلمة هي school.'),
+  q('l','A1','L','Listen and write the transport word you hear.','استمع واكتب وسيلة النقل التي سمعتها.','I go to work by bus.||أذهب إلى العمل بالحافلة.','bus','The sentence mentions "bus".','الجملة ذكرت كلمة bus.'),
+  q('m','A1','V','Which one is a colour?','أي منها لون؟','table||table;red||red;run||run;slowly||slowly',1,'"Red" is a colour.','Red لون.'),
+  q('w','A1','W','Write one sentence about your family.','اكتب جملة واحدة عن عائلتك.','','family','Write at least 4 words that include "family" or a family member.','اكتب 4 كلمات على الأقل تشمل family أو أحد أفراد الأسرة.'),
+  q('f','A1','G','I have ___ brother.','عندي ___ أخ.','','a;one','Use "a" before a singular countable noun.','نستخدم a قبل اسم المفرد المعدود.'),
+
+  /* ---------------- A2 ---------------- */
+  q('m','A2','G','I have lived here ___ 2019.','أسكن هنا ___ 2019.','since||since;for||for;from||from;ago||ago',0,'"Since" is used with a point in time.','Since تُستخدم مع نقطة زمنية محددة.'),
+  q('m','A2','G','She ___ her homework yesterday.','هي ___ واجبها أمس.','do||do;did||did;does||does;doing||doing',1,'Past simple: "did".','الماضي البسيط: did.'),
+  q('e','A2','G','Find the mistake: "I am agree with you."','اكتشف الخطأ: "I am agree with you."','I||I;am||am;agree||agree;with you||معك',2,'"Agree" is a verb: "I agree", not "I am agree".','agree فعل: I agree وليس I am agree.'),
+  q('f','A2','G','If it rains, we ___ at home.','إذا أمطرت، ___ في البيت.','','will stay;will stay home','First conditional: If + present, will + verb.','الشرطية الأولى: If + مضارع، will + فعل.'),
+  q('a','A2','G','Arrange the words into a question.','رتّب الكلمات لتكوين سؤال.','What||ماذا;time||وقت;does||does;the||the;film||الفيلم;start||يبدأ','What time does the film start','Question order: question word + auxiliary + subject + verb.','ترتيب السؤال: أداة الاستفهام + فعل مساعد + فاعل + فعل.'),
+  q('s','A2','V','Rearrange the letters: HGSILEN','أعد ترتيب الحروف: HGSILEN','','english','The word is "english".','الكلمة هي english.'),
+  q('m','A2','V','A person who teaches is a ___.','الشخص الذي يُدرّس هو ___.','teacher||teacher;student||student;driver||driver;farmer||farmer',0,'Teacher = someone who teaches.','Teacher هو من يُدرّس.'),
+  q('k','A2','V','Match each word with its synonym.','طابق كل كلمة مع مرادفها.','big||big>large||large;quickly||quickly>fast||fast;happy||happy>glad||glad','0,1,2','Big = large, quickly = fast, happy = glad.','big = large، quickly = fast، happy = glad.'),
+  q('m','A2','G','There ___ many people at the party.','___ أشخاص كثيرون في الحفلة.','is||is;are||are;was||was;be||be',1,'"People" is plural → "are".','People جمع → are.'),
+  q('l','A2','L','Listen and write the subject you hear.','استمع واكتب المادة التي سمعتها.','My favourite subject is mathematics.||مادتي المفضلة هي الرياضيات.','mathematics;math;maths','The sentence mentions "mathematics".','الجملة ذكرت mathematics.'),
+  q('w','A2','W','Write a sentence using the word "because".','اكتب جملة تستخدم فيها كلمة "because".','','because','Your sentence must contain "because" and at least 5 words.','يجب أن تحتوي الجملة على because وخمس كلمات على الأقل.'),
+  q('m','A2','R','Read: "Sara works in a hospital and helps sick people." What is Sara\'s job?','اقرأ: "سارة تعمل في مستشفى وتساعد المرضى." ما وظيفة سارة؟','A doctor or nurse||طبيبة أو ممرضة;A teacher||معلمة;A pilot||طائرة ملاح;A cook||طبّاخة',0,'Working in a hospital and helping sick people means medical work.','العمل في مستشفى ومساعدة المرضى يعني العمل الطبي.'),
+
+  /* ---------------- B1 ---------------- */
+  q('m','B1','G','By the time we arrived, the film ___.','عندما وصلنا، كان الفيلم ___ قد بدأ.','started||started;had started||had started;has started||has started;starts||starts',1,'Past perfect for the earlier action.','الماضي التام للحدث الأسبق.'),
+  q('e','B1','G','Find the mistake: "Despite of the rain, we went out."','اكتشف الخطأ: "Despite of the rain, we went out."','Despite of||Despite of;the rain||المطر;we went||خرجنا;out||out',0,'"Despite" never takes "of": "Despite the rain".','Despite لا تأخذ of: Despite the rain.'),
+  q('f','B1','G','I wish I ___ speak French fluently.','أتمنى لو أنني ___ أتحدث الفرنسية بطلاقة.','','could','"I wish" + past form expresses a present wish.','I wish + صيغة الماضي تعبر عن أمنية حالية.'),
+  q('a','B1','G','Arrange the words into a sentence.','رتّب الكلمات لتكوين جملة.','She||هي;has||has;been||been;working||تعمل;here||هنا;for||منذ;three||ثلاثة;years||سنوات','She has been working here for three years','Present perfect continuous with "for".','المضارع التام المستمر مع for.'),
+  q('m','B1','V','To "give up" means to ___.','التعبير "give up" يعني ___.','stop trying||تتوقف عن المحاولة;start again||تبدأ من جديد;continue||تستمر;help||تساعد',0,'"Give up" = stop trying.','Give up = تتوقف عن المحاولة.'),
+  q('k','B1','V','Match each phrasal verb with its meaning.','طابق كل فعل مركب مع معناه.','give up||give up>stop trying||stop trying;look after||look after>take care of||take care of;put off||put off>postpone||postpone','0,1,2','Give up = stop, look after = care for, put off = postpone.','give up = تتوقف، look after = تعتني، put off = تؤجل.'),
+  q('s','B1','V','Rearrange the letters: DNATSNEDRU','أعد ترتيب الحروف: DNATSNEDRU','','understand','The word is "understand".','الكلمة هي understand.'),
+  q('l','B1','L','Listen and write the day you hear.','استمع واكتب اليوم الذي سمعته.','The meeting has been postponed until next Thursday.||تم تأجيل الاجتماع حتى الخميس القادم.','thursday;next thursday','The sentence mentions "Thursday".','الجملة ذكرت Thursday.'),
+  q('m','B1','G','The report ___ by the team yesterday.','التقرير ___ بواسطة الفريق أمس.','was written||was written;wrote||wrote;writes||writes;is writing||is writing',0,'Passive voice: was + past participle.','المبني للمجهول: was + التصريف الثالث.'),
+  q('w','B1','W','Write a sentence about your future plans using "plan to".','اكتب جملة عن خططك المستقبلية باستخدام "plan to".','','plan','Include "plan to" and at least 6 words.','استخدم plan to وست كلمات على الأقل.'),
+  q('m','B1','R','Read: "Ahmed passed all his exams with excellent marks." How did he perform?','اقرأ: "أحمد اجتاز كل اختباراته بدرجات ممتازة." كيف كان أداؤه؟','Very well||جيد جداً;Badly||سيئاً;Average||متوسطاً;He failed||رسب',0,'"Excellent marks" means very good performance.','درجات ممتازة تعني أداءً جيداً جداً.'),
+  q('e','B1','G','Find the mistake: "She suggested to go to the cinema."','اكتشف الخطأ: "She suggested to go to the cinema."','She||She;suggested||suggested;to go||to go;to the cinema||إلى السينما',2,'"Suggest" takes the -ing form: "suggested going".','suggest تأخذ صيغة ing: suggested going.'),
+
+  /* ---------------- B2 ---------------- */
+  q('m','B2','G','Hardly ___ home when the phone rang.','بالكاد ___ إلى المنزل عندما رن الهاتف.','I had arrived||I had arrived;had I arrived||had I arrived;I arrived||I arrived;did I arrive||did I arrive',1,'After "hardly" we invert subject and auxiliary.','بعد hardly نقلب الفاعل والفعل المساعد.'),
+  q('e','B2','G','Find the mistake: "The number of students have increased."','اكتشف الخطأ: "The number of students have increased."','The number||The number;of students||من الطلاب;have||have;increased||ارتفع',2,'"The number" is singular → "has increased".','The number مفرد → has increased.'),
+  q('f','B2','G','It\'s high time we ___ this problem seriously.','حان الوقت أن ___ هذه المشكلة بجدية.','','took;take','"It\'s high time" takes the past form.','It\'s high time تأخذ صيغة الماضي.'),
+  q('a','B2','G','Arrange the inverted conditional sentence.','رتّب الجملة الشرطية المقلوبة.','Were||Were;I||I;you||you;I||I;would||would;accept||أقبل;the||the;offer||العرض','Were I you I would accept the offer','Inverted second conditional: Were I you, I would…','الشرطية الثانية المقلوبة: Were I you, I would…'),
+  q('m','B2','V','His explanation was so ___ that everyone understood immediately.','كان شرحه ___ لدرجة أن الجميع فهم فوراً.','obscure||غامض;ambiguous||ملتبس;convoluted||معقد;lucid||واضح',3,'"Lucid" means clear and easy to understand.','Lucid تعني واضحاً وسهلاً الفهم.'),
+  q('k','B2','V','Match each word with its synonym.','طابق كل كلمة مع مرادفها.','albeit||albeit>although||although;hence||hence>therefore||therefore;scarce||scarce>rare||rare','0,1,2','Albeit = although, hence = therefore, scarce = rare.','albeit = although، hence = therefore، scarce = rare.'),
+  q('s','B2','V','Rearrange the letters: PTINECROE','أعد ترتيب الحروف: PTINECROE','','perception','The word is "perception".','الكلمة هي perception.'),
+  q('l','B2','L','Listen and write the key adjective you hear.','استمع واكتب الصفة الأساسية التي سمعتها.','The committee reached a unanimous decision after a lengthy debate.||توصلت اللجنة إلى قرار بالإجماع بعد نقاش طويل.','unanimous','The adjective is "unanimous".','الصفة هي unanimous.'),
+  q('m','B2','G','She is one of those people who ___ never satisfied.','هي واحدة من أولئك الناس الذين ___ أبداً راضين.','is||is;are||are;was||was;be||be',1,'"Who" refers to "people" (plural) → "are".','Who تعود على people (جمع) → are.'),
+  q('w','B2','W','Write at least 10 words arguing for or against working from home.','اكتب 10 كلمات على الأقل معترضاً أو مؤيداً للعمل من المنزل.','','work','Include "work" or "home" and at least 10 words.','استخدم work أو home وعشر كلمات على الأقل.'),
+  q('m','B2','R','Read: "Although the product was priced competitively, sales remained sluggish." What does it mean?','اقرأ: "رغم أن السعر كان تنافسياً، بقيت المبيعات راكدة." ماذا يعني ذلك؟','Sales were slow||المبيعات كانت بطيئة;Sales rose||ارتفعت المبيعات;Price was high||السعر مرتفع;The product failed||فشل المنتج',0,'"Sluggish" means slow.','Sluggish تعني بطيئة.'),
+  q('e','B2','G','Find the mistake: "Each of the players have received a certificate."','اكتشف الخطأ: "Each of the players have received a certificate."','Each||Each;of the players||من اللاعبين;have||have;received a certificate||شهادة',2,'"Each" is singular → "has received".','Each مفرد → has received.'),
+
+  /* ---------------- C1 ---------------- */
+  q('m','C1','G','Not until the deadline ___ the gravity of the situation.','لم ___ خطورة الموقف حتى الموعد النهائي.','he realised||he realised;did he realise||did he realise;he had realised||he had realised;realised he||realised he',1,'Negative fronting triggers inversion.','النفي في بداية الجملة يسبب القلب.'),
+  q('f','C1','G','The proposal was rejected on the ___ that it was too costly.','رُفض الاقتراح على ___ أنه مكلف للغاية.','','grounds;basis','"On the grounds that" is a fixed academic phrase.','On the grounds that تعبير أكاديمي ثابت.'),
+  q('e','C1','G','Find the mistake: "The data suggests that the policy have failed."','اكتشف الخطأ: "The data suggests that the policy have failed."','The data||The data;suggests||suggests;that the policy||أن السياسة;have failed||have failed',3,'"The policy" is singular → "has failed".','The policy مفرد → has failed.'),
+  q('a','C1','G','Arrange the fronted sentence.','رتّب الجملة المعكوسة.','Little||Little;did||did;she||هي;expect||تتوقع;such||مثل;a||a;lukewarm||فاترة;reception||استقبال','Little did she expect such a lukewarm reception','Fronted "little" forces subject–auxiliary inversion.','تقديم little يفرض قلب الفاعل والفعل المساعد.'),
+  q('m','C1','V','The minister\'s remarks were deliberately ___.','كان تصريحات الوزير ___ عمداً.','unequivocal||قاطعة;lucid||واضحة;candid||صريحة;ambiguous||ملتبسة',3,'"Ambiguous" = open to more than one interpretation.','Ambiguous = محتمل أكثر من تفسير.'),
+  q('k','C1','V','Match each word with its synonym.','طابق كل كلمة مع مرادفها.','ubiquitous||ubiquitous>widespread||widespread;prudent||prudent>cautious||cautious;mitigate||mitigate>reduce||reduce','0,1,2','Ubiquitous = widespread, prudent = cautious, mitigate = reduce.','ubiquitous = widespread، prudent = cautious، mitigate = reduce.'),
+  q('s','C1','V','Rearrange the letters: EOENCLQUE','أعد ترتيب الحروف: EOENCLQUE','','eloquence','The word is "eloquence".','الكلمة هي eloquence.'),
+  q('l','C1','L','Listen and write the key noun you hear.','استمع واكتب الاسم الأساسي الذي سمعته.','The unprecedented growth was attributed to a confluence of favourable factors.||عُزِي النمو غير المسبوق إلى تلاقٍ من العوامل المواتية.','confluence;growth','The key nouns are "growth" and "confluence".','الأسماء الأساسية هي growth و confluence.'),
+  q('m','C1','G','___ the heavy traffic, she arrived on time.','___ الازدحام الشديد، وصلت في الوقت المحدد.','Despite||Despite;Although||Although;Because||Because;In spite||In spite',0,'"Despite" + noun phrase (no "of").','Despite + اسم بدون of.'),
+  q('w','C1','W','Write at least 12 words evaluating the impact of social media on education.','اكتب 12 كلمة على الأقل تقيّم فيها تأثير التواصل الاجتماعي على التعليم.','','social media;education','Include "social media" or "education" and at least 12 words.','استخدم social media أو education واثنتي عشرة كلمة على الأقل.'),
+  q('m','C1','R','Read: "The initiative was hailed as a paradigm shift, yet critics argue it merely repackages existing policies." What is the critics\' view?','اقرأ: "احتُفي بالمبادرة كنقلة نوعية، لكن المنتقدين يرون أنها مجرد إعادة تغليف للسياسات القائمة." ما رأي المنتقدين؟','Nothing really changed||لم يتغير شيء فعلاً;It is revolutionary||إنها ثورية;It is illegal||إنها غير قانونية;It is cost-effective||إنها اقتصادية',0,'"Merely repackages" means nothing fundamentally changed.','"مجرد إعادة تغليف" تعني عدم تغيير شيء جوهري.'),
+  q('e','C1','G','Find the mistake: "She is one of the most brilliant student in the department."','اكتشف الخطأ: "She is one of the most brilliant student in the department."','She||She;is one of||is one of;the most brilliant student||الطالب الأكثر براعة;in the department||في القسم',2,'"One of the most brilliant students" needs the plural.','One of the most brilliant students تحتاج صيغة الجمع.')
+];
+
+/* ---------------- persistence ---------------- */
+function load() {
+  try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; }
+}
+function save(obj) {
+  try { localStorage.setItem(KEY, JSON.stringify(obj)); } catch (e) {}
+}
+
+/* ---------------- home / entry ---------------- */
+function viewPlacementHome() {
+  var rec = load();
+  var govs = F.COURSES ? window.FASLA_PAGES.GOVS : [];
+  return '<section class="page-head" style="background:var(--green)"><div class="wrap">' +
+    '<div class="crumb" style="color:#06203F">' + window.FASLA_PAGES.crumbHome(t('pl.title')) + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px;max-width:17ch;color:#06203F">' + esc(t('pl.title')) + '</h1>' +
+    '<p class="sub" style="margin-top:18px;color:rgba(6,32,63,.82)">' + esc(t('pl.sub')) + '</p></div></section>' +
+  '<section class="section"><div class="wrap" id="plEntry">' +
+    (rec && rec.done
+      ? '<div class="notice"><strong>' + esc(t('p.completedNote')) + '</strong><br>' +
+        esc(t('p.name')) + ': ' + esc(rec.name) + ' · ' + esc(t('p.scoreOf')) + ': ' + rec.score + '/120' +
+        '<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px">' +
+        '<a class="btn btn-navy" href="#/placement-results">' + esc(t('p.resultTitle')) + '</a></div></div>'
+      : rec && !rec.done
+        ? '<div class="notice"><strong>' + esc(t('p.resumeNote')) + '</strong><br>' +
+          esc(t('p.name')) + ': ' + esc(rec.name) + ' · ' + esc(t('p.qOf')) + ' ' + ((rec.current || 0) + 1) + '/60' +
+          '<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px">' +
+          '<a class="btn btn-yellow" href="#/placement-test">' + esc(t('p.resume')) + '</a></div></div>'
+        : '') +
+    '<div class="formset" style="margin-top:26px"><h3>' + esc(t('p.studentInfo')) + '</h3>' +
+      '<form id="plForm" novalidate><div class="form-grid" style="margin-top:22px">' +
+        window.FASLA_PAGES.field('name', t('p.name'), 'text', {}) +
+        window.FASLA_PAGES.field('age', t('p.ageLbl'), 'number', { min: 5, max: 99, err: t('r.errAge') }) +
+        window.FASLA_PAGES.field('gov', t('p.govLbl'), 'select', { options: govs }) +
+        window.FASLA_PAGES.field('phone', t('p.phoneLbl'), 'tel', { ph: '01xxxxxxxxx', err: t('r.errPhone') }) +
+      '</div>' +
+      '<div style="margin-top:22px;display:flex;flex-wrap:wrap;gap:12px">' +
+        '<button class="btn btn-navy" type="submit">' + esc(t('p.startTest')) + '</button>' +
+      '</div></form></div>' +
+    '<div class="notice" style="margin-top:26px"><strong>' + esc(t('p.limitation')) + '</strong><br>' + esc(t('p.limitationTxt')) + '</div>' +
+    '<div class="res-grid" style="margin-top:26px">' +
+      '<div class="res-cell"><span>' + esc(t('pl.st1')) + '</span><b class="num">60</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('pl.st2')) + '</span><b class="num">A1–C1</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('q.timeLeft')) + '</span><b class="num">60s / 180s</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('p.scoreOf')) + '</span><b class="num">120</b></div>' +
+    '</div>' +
+  '</div></section>';
+}
+function initPlacementHome() {
+  var form = document.getElementById('plForm');
+  if (!form) return;
+  form.addEventListener('submit', function (ev) {
+    ev.preventDefault();
+    var e = form.elements, ok = true;
+    function bad(name, on) {
+      var box = form.querySelector('[data-field="' + name + '"]');
+      if (box) box.classList.toggle('err', !!on);
+      return !on;
+    }
+    ok = bad('name', !e.name.value.trim()) && ok;
+    var age = parseInt(e.age.value, 10);
+    ok = bad('age', !(age >= 5 && age <= 99)) && ok;
+    ok = bad('gov', !e.gov.value) && ok;
+    ok = bad('phone', !/^01[0-2,5]{1}[0-9]{8}$/.test(e.phone.value.replace(/\s/g, ''))) && ok;
+    if (!ok) return;
+    save({
+      id: 'FASLA-' + Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random() * 900 + 100),
+      name: e.name.value.trim(), age: e.age.value, gov: e.gov.value, phone: e.phone.value.trim(),
+      startedAt: Date.now(), answers: {}, current: 0, done: false, score: 0
+    });
+    location.hash = '#/placement-test';
+  });
+}
+
+/* ---------------- test engine ---------------- */
+var timerId = null, remaining = 0;
+function viewPlacementTest() {
+  /* the test renders itself through initPlacementTest → renderQuestion */
+  return '<section class="page-head"><div class="wrap">' +
+    '<div class="crumb">' + window.FASLA_PAGES.crumbHome(t('pl.title')) + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px">' + esc(t('p.startTest')) + '</h1></div></section>' +
+    '<section class="section"><div class="wrap"><div class="panel"><p class="sub">' + esc(t('pl.sub')) + '</p></div></div></section>';
+}
+function initPlacementTest() {
+  var rec = load();
+  if (!rec) { location.hash = '#/placement'; return; }
+  if (rec.done) { location.hash = '#/placement-results'; return; }
+  renderQuestion();
+}
+function timeFor(type) { return type === 'w' ? 180 : 60; }
+
+function renderQuestion() {
+  clearInterval(timerId);
+  var rec = load();
+  var i = rec.current || 0;
+  var item = Q[i];
+  var el = document.getElementById('view');
+  if (!el) return;
+  var pct = i / Q.length * 100;
+  var body = '';
+  if (item.type === 'm' || item.type === 'e') {
+    var opts = P(item.opts);
+    body = '<div class="opts">' + opts.map(function (o, j) {
+      return '<button class="opt' + (String(rec.answers[i]) === String(j) ? ' sel' : '') + '" data-o="' + j + '">' +
+        '<span class="k">' + 'ABCDEF'.charAt(j) + '</span><span>' + esc(tx(o)) + '</span></button>';
+    }).join('') + '</div>';
+  } else if (item.type === 'f' || item.type === 's' || item.type === 'w' || item.type === 'l') {
+    body = (item.type === 's' && item.opts ? '<div class="chips"><span class="chip slot">' + esc(String(item.opts).split('').join(' · ')) + '</span></div>' : '') +
+      (item.type === 'l'
+        ? '<div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:12px;align-items:center">' +
+          '<button class="btn btn-navy btn-sm" id="playBtn">' + esc(t('q.listen')) + '</button>' +
+          '<span class="hint">' + esc(tx(P(item.opts)[0])) + '</span></div>'
+        : '') +
+      '<div class="field full" style="margin-top:18px"><label for="ansInput">' + esc(t('q.writeHere')) + '</label>' +
+      (item.type === 'w'
+        ? '<textarea id="ansInput" rows="5">' + esc(rec.answers[i] || '') + '</textarea>'
+        : '<input id="ansInput" type="text" value="' + esc(rec.answers[i] || '') + '">') + '</div>';
+  } else if (item.type === 'a') {
+    var used = (rec.answers[i] || '').trim();
+    var usedArr = used ? used.split('|') : [];
+    var words = P(item.opts);
+    body = '<p class="hint" style="margin-top:14px">' + esc(t('q.wordsBox')) + '</p>' +
+      '<div class="answer-line">' + (usedArr.length
+        ? usedArr.map(function (w, j) { return '<button class="chip" data-out="' + j + '">' + esc(w) + '</button>'; }).join('')
+        : '<span class="hint">' + esc(t('q.wordsBox')) + '</span>') + '</div>' +
+      '<div class="chips">' + words.map(function (w, j) {
+        return '<button class="chip' + (usedArr.indexOf(tx(w)) > -1 ? ' used' : '') + '" data-in="' + j + '">' + esc(tx(w)) + '</button>';
+      }).join('') + '</div>';
+  } else if (item.type === 'k') {
+    var pairs = P(item.opts.split('>')[0] ? item.opts.split(';') : []);
+    var kp = String(item.ans).split(',');
+    body = '<p class="hint" style="margin-top:14px">' + esc(t('q.matchPrompt')) + '</p>' +
+      P(item.opts).map(function (p, j) {
+        var halves = item.opts.split(';')[j].split('>');
+        var sel = (rec.answers[i] || '');
+        return '<div class="match-row"><div style="font-family:var(--display);font-weight:600">' + esc(tx([halves[0].split('||')[0], halves[0].split('||')[1]])) + '</div>' +
+          '<div class="arrow">→</div>' +
+          '<div class="field"><select data-k="' + j + '"><option value="">—</option>' +
+          P(item.opts).map(function (p2, k2) {
+            var h2 = item.opts.split(';')[k2].split('>');
+            return '<option value="' + k2 + '"' + (sel.split(',')[j] === String(k2) ? ' selected' : '') + '>' +
+              esc(tx([h2[1].split('||')[0], h2[1].split('||')[1]])) + '</option>';
+          }).join('') + '</select></div></div>';
+      }).join('');
+  }
+
+  el.innerHTML =
+    '<section class="section" style="background:var(--navy-deep);color:#fff;padding-block:clamp(96px,11vw,130px) 60px">' +
+      '<div class="wrap quiz-shell">' +
+        '<div class="qbar">' +
+          '<div><div class="eyebrow">' + esc(t('p.qOf')) + ' ' + (i + 1) + ' / ' + Q.length + ' · ' + esc(item.level) + '</div></div>' +
+          '<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">' +
+            '<span class="tagchip" style="color:var(--beige);border-color:rgba(255,255,255,.3)">' + esc(t(TYPEKEY[item.type])) + '</span>' +
+            '<div class="timer" id="timer">00:00</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="qtrack"><i style="width:' + pct + '%"></i></div>' +
+        '<div class="qcard" style="margin-top:22px">' +
+          '<div class="qtype">' + esc(item.level) + ' · ' + esc(tx(SKILLS[item.skill])) + '</div>' +
+          '<h3>' + esc(tx(item.q)) + '</h3>' + body +
+          '<div class="qnav">' +
+            '<button class="btn btn-yellow" id="nextBtn">' + (i < Q.length - 1 ? esc(t('p.saveNext')) : esc(t('p.finish'))) + '</button>' +
+            (i < Q.length - 1 ? '<button class="btn btn-ghost" id="skipBtn">' + esc(t('q.skip')) + '</button>' : '') +
+            '<button class="btn btn-ghost" id="finishBtn">' + esc(t('p.finish')) + '</button>' +
+          '</div>' +
+          '<p class="hint" style="margin-top:14px">' + esc(t('p.savedAt')) + ' · ' + esc(rec.id) + '</p>' +
+        '</div>' +
+      '</div>' +
+    '</section>';
+
+  /* interactions */
+  el.querySelectorAll('[data-o]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var r = load(); r.answers[i] = b.getAttribute('data-o'); save(r);
+      el.querySelectorAll('.opt').forEach(function (x) { x.classList.remove('sel'); });
+      b.classList.add('sel');
+    });
+  });
+  var input = document.getElementById('ansInput');
+  if (input) input.addEventListener('input', function () {
+    var r = load(); r.answers[i] = input.value; save(r);
+  });
+  el.querySelectorAll('[data-in]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var r = load();
+      var arr = (r.answers[i] || '') ? String(r.answers[i]).split('|') : [];
+      var words = P(Q[i].opts);
+      arr.push(tx(words[parseInt(b.getAttribute('data-in'), 10)]));
+      r.answers[i] = arr.join('|'); save(r); renderQuestion();
+    });
+  });
+  el.querySelectorAll('[data-out]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var r = load();
+      var arr = String(r.answers[i] || '').split('|');
+      arr.splice(parseInt(b.getAttribute('data-out'), 10), 1);
+      r.answers[i] = arr.join('|'); save(r); renderQuestion();
+    });
+  });
+  el.querySelectorAll('[data-k]').forEach(function (s) {
+    s.addEventListener('change', function () {
+      var r = load();
+      var arr = String(r.answers[i] || '').split(',');
+      arr[parseInt(s.getAttribute('data-k'), 10)] = s.value;
+      r.answers[i] = arr.join(','); save(r);
+    });
+  });
+  var play = document.getElementById('playBtn');
+  if (play) play.addEventListener('click', function () {
+    try {
+      var u = new SpeechSynthesisUtterance(P(item.opts)[0]);
+      u.lang = 'en-US'; u.rate = 0.92;
+      window.speechSynthesis.speak(u);
+    } catch (e) { F.flash(t('q.listen')); }
+  });
+
+  function goNext() {
+    clearInterval(timerId);
+    var r = load();
+    if (i < Q.length - 1) { r.current = i + 1; save(r); renderQuestion(); }
+    else finishTest();
+  }
+  document.getElementById('nextBtn').addEventListener('click', goNext);
+  var sb = document.getElementById('skipBtn');
+  if (sb) sb.addEventListener('click', goNext);
+  document.getElementById('finishBtn').addEventListener('click', function () {
+    if (window.confirm(t('p.confirmFinish'))) finishTest();
+  });
+
+  /* timer: 60s ordinary, 180s writing */
+  remaining = timeFor(item.type);
+  var timerEl = document.getElementById('timer');
+  function tick() {
+    var m = Math.floor(remaining / 60), s = remaining % 60;
+    if (timerEl) timerEl.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    if (timerEl) timerEl.classList.toggle('low', remaining <= 10);
+    if (remaining <= 0) {
+      clearInterval(timerId);
+      F.flash(t('p.timeUp'));
+      goNext();
+      return;
+    }
+    remaining--;
+  }
+  tick();
+  timerId = setInterval(tick, 1000);
+}
+
+function finishTest() {
+  clearInterval(timerId);
+  var r = load();
+  r.done = true;
+  r.finishedAt = Date.now();
+  r.score = computeScore(r).score;
+  save(r);
+  location.hash = '#/placement-results';
+}
+
+/* ---------------- transparent scoring ---------------- */
+function norm(s) {
+  return String(s == null ? '' : s).toLowerCase().trim()
+    .replace(/[.,!?;:'"’]/g, '').replace(/\s+/g, ' ');
+}
+function computeScore(rec) {
+  var total = 0, perSkill = {}, perLevel = {}, wrong = [];
+  Q.forEach(function (item, i) {
+    var given = rec.answers ? rec.answers[i] : null;
+    var ok = false;
+    if (item.type === 'm' || item.type === 'e') {
+      ok = String(given) === String(item.ans);
+    } else if (item.type === 'f' || item.type === 's' || item.type === 'l') {
+      ok = String(item.ans).split(';').some(function (a) { return norm(a) === norm(given); });
+    } else if (item.type === 'a') {
+      ok = norm(String(given || '').split('|').join(' ')) === norm(P(item.opts).map(tx).join(' '));
+    } else if (item.type === 'k') {
+      var arr = String(given || '').split(',');
+      var kp = String(item.ans).split(',');
+      var right = 0;
+      kp.forEach(function (k, j) { if (String(arr[j]) === String(k)) right++; });
+      ok = right === kp.length;
+    } else if (item.type === 'w') {
+      var words = norm(given).split(' ').filter(Boolean);
+      var kws = String(item.ans).split(';');
+      ok = given && words.length >= 10 && kws.some(function (k) { return norm(given).indexOf(norm(k)) > -1; });
+      if (!ok && given && words.length >= 4) ok = kws.some(function (k) { return norm(given).indexOf(norm(k)) > -1; });
+    }
+    if (ok) total += 2;
+    else wrong.push({ i: i, item: item, given: given });
+    var sk = SKILLS[item.skill][0];
+    perSkill[sk] = perSkill[sk] || { ok: 0, n: 0 };
+    perSkill[sk].n++; if (ok) perSkill[sk].ok++;
+    perLevel[item.level] = perLevel[item.level] || { ok: 0, n: 0 };
+    perLevel[item.level].n++; if (ok) perLevel[item.level].ok++;
+  });
+  return { score: total, perSkill: perSkill, perLevel: perLevel, wrong: wrong };
+}
+function cefrFrom(perLevel) {
+  var est = 'A1';
+  LEVELS.forEach(function (lv) {
+    var d = perLevel[lv];
+    if (d && d.n && (d.ok / d.n) >= 0.5) est = lv;
+  });
+  return est;
+}
+function gradeFrom(pct) {
+  if (pct >= 90) return 'A+'; if (pct >= 80) return 'A';
+  if (pct >= 70) return 'B'; if (pct >= 60) return 'C'; return 'D';
+}
+
+function viewPlacementResults() {
+  return '<section class="page-head"><div class="wrap">' +
+    '<div class="crumb">' + window.FASLA_PAGES.crumbHome(t('p.resultTitle')) + '</div>' +
+    '<h1 class="h-sec" style="margin-top:16px">' + esc(t('p.resultTitle')) + '</h1></div></section>' +
+    '<section class="section"><div class="wrap" id="plResult"></div></section>';
+}
+
+function initPlacementResults() {
+  var rec = load();
+  var el = document.getElementById('plResult');
+  if (!el) return;
+  if (!rec || !rec.done) {
+    el.innerHTML = '<div class="notice"><strong>' + esc(t('pl.title')) + '</strong><br>' + esc(t('pl.sub')) +
+      '<div style="margin-top:18px"><a class="btn btn-navy" href="#/placement">' + esc(t('pl.cta')) + '</a></div></div>';
+    return;
+  }
+  var res = computeScore(rec);
+  var pct = Math.round(res.score / 120 * 100);
+  var level = cefrFrom(res.perLevel);
+  var skillRows = Object.keys(res.perSkill).map(function (k) {
+    var d = res.perSkill[k];
+    return { name: k, pct: Math.round(d.ok / d.n * 100), ok: d.ok, n: d.n };
+  }).sort(function (a, b) { return b.pct - a.pct; });
+  var strengths = skillRows.filter(function (s) { return s.pct >= 60; }).slice(0, 3).map(function (s) { return s.name; });
+  var weaknesses = skillRows.slice().sort(function (a, b) { return a.pct - b.pct; }).filter(function (s) { return s.pct < 60; }).slice(0, 3).map(function (s) { return s.name; });
+
+  var advice = [];
+  if (weaknesses.length) advice.push(tx(['Start every study session with your weakest skill: ', 'ابدأ كل جلسة مذاكرة بمهاراتك الأضعف: ']) + weaknesses.join(', ') + '.');
+  advice.push(tx(['Study 45 focused minutes a day rather than long weekly sessions.', 'ادرس 45 دقيقة مركزة يوميًا بدل جلسات طويلة أسبوعية.']));
+  advice.push(tx(['Keep an error notebook: write every mistake from this test and its correction.', 'احتفظ بدفتر أخطاء: اكتب كل خطأ في هذا الاختبار مع تصحيحه.']));
+  advice.push(tx(['Review this test after two weeks of study to measure real improvement.', 'أعد مراجعة هذا الاختبار بعد أسبوعين من الدراسة لقياس التحسّن الفعلي.']));
+  if (level === 'A1' || level === 'A2') advice.push(tx(['Focus on core vocabulary (the 1500 most frequent words) before anything else.', 'ركز على المفردات الأساسية (أكثر 1500 كلمة استخدامًا) قبل أي شيء آخر.']));
+
+  var recCourse = { A1:'a1', A2:'a2', B1:'b1', B2:'b2', C1:'c1' }[level];
+  var extra = weaknesses.indexOf('Grammar') > -1 ? 'grammar' : (weaknesses.indexOf('Pronunciation') > -1 || weaknesses.indexOf('Listening') > -1 ? 'speaking' : null);
+
+  var nl = '\n';
+  var report = [
+    '📄 ' + t('p.reportTitle'),
+    '——————————————————',
+    t('p.name') + ': ' + rec.name,
+    t('p.ageLbl') + ': ' + rec.age,
+    t('p.govLbl') + ': ' + rec.gov,
+    t('p.phoneLbl') + ': ' + rec.phone,
+    t('p.attempt') + ': ' + rec.id,
+    '——————————————————',
+    t('p.scoreOf') + ': ' + res.score + ' / 120',
+    t('q.percent') + ': ' + pct + '%',
+    t('p.cefr') + ': ' + level,
+    t('p.overall') + ': ' + gradeFrom(pct),
+    '——————————————————',
+    t('p.strengthsLbl') + ': ' + (strengths.length ? strengths.join(', ') : '—'),
+    t('p.weakLbl') + ': ' + (weaknesses.length ? weaknesses.join(', ') : '—'),
+    t('p.generalEval') + ': ' + (pct >= 80
+      ? (state_txt(['Excellent command of English with strong accuracy across skills.', 'تحكّم ممتاز في الإنجليزية بدقة عالية في جميع المهارات.']))
+      : pct >= 60
+        ? (state_txt(['Good intermediate performance with clear gaps to close.', 'أداء جيد مع فجوات واضحة تحتاج إلى المعالجة.']))
+        : (state_txt(['Developing command — a structured course will produce fast results.', 'اللغة في طور التكوين — الكورس المنظم سيحقق نتائج سريعة.']))),
+    '——————————————————',
+    t('p.incorrect') + ': ' + (res.wrong.length ? res.wrong.length + ' ' + state_txt(['questions','سؤال']) : state_txt(['None','لا يوجد'])),
+    res.wrong.slice(0, 8).map(function (w, k) {
+      return (k + 1) + ') ' + w.item.q[0] + ' → ' + t('q.correctAnswer') + ': ' + correctText(w.item);
+    }).join(nl),
+    '——————————————————',
+    t('p.recommendations') + ': ' + advice.join(' '),
+    t('q.recCourses') + ': ' + [F.courseById(recCourse)].concat(extra ? [F.courseById(extra)] : []).map(function (c) { return c.name[0]; }).join(', '),
+    '——————————————————',
+    'FASLA · fasla.english.ceo@gmail.com'
+  ].join(nl);
+
+  var waURL = 'https://wa.me/201201847164?text=' + encodeURIComponent(report);
+
+  el.innerHTML =
+    '<div class="panel"><div style="text-align:center">' +
+      '<div class="score-ring" style="--pct:' + pct + '%"><div class="val"><b class="num">' + res.score + '</b><span>/ 120</span></div></div>' +
+      '<h3 style="margin-top:22px">' + esc(rec.name) + '</h3>' +
+      '<p class="sub" style="margin:10px auto 0;text-align:center">' + esc(rec.gov) + ' · ' + esc(rec.phone) + ' · ' + esc(t('p.attempt')) + ': ' + esc(rec.id) + '</p>' +
+    '</div>' +
+    '<div class="res-grid" style="margin-top:26px">' +
+      '<div class="res-cell"><span>' + esc(t('q.percent')) + '</span><b class="num">' + pct + '%</b><div class="bar"><i style="width:' + pct + '%"></i></div></div>' +
+      '<div class="res-cell"><span>' + esc(t('p.cefr')) + '</span><b>' + esc(level) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('p.overall')) + '</span><b>' + esc(gradeFrom(pct)) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('p.ageLbl')) + '</span><b class="num">' + esc(rec.age) + '</b></div>' +
+    '</div>' +
+
+    '<h2 style="margin-top:40px">' + esc(t('p.skillBreakdown')) + '</h2>' +
+    '<div class="stack" style="margin-top:18px">' + skillRows.map(function (s) {
+      return '<div class="res-cell"><span>' + esc(s.name) + ' · ' + s.ok + '/' + s.n + '</span>' +
+        '<b class="num">' + s.pct + '%</b><div class="bar"><i style="width:' + s.pct + '%;background:' +
+        (s.pct >= 60 ? 'var(--green)' : s.pct >= 40 ? 'var(--gold)' : '#C62828') + '"></i></div></div>';
+    }).join('') + '</div>' +
+
+    '<div class="res-grid" style="margin-top:26px">' +
+      '<div class="res-cell"><span>' + esc(t('p.strengthsLbl')) + '</span><b style="font-size:1.25rem">' +
+        esc(strengths.length ? strengths.join(' · ') : t('q.none')) + '</b></div>' +
+      '<div class="res-cell"><span>' + esc(t('p.weakLbl')) + '</span><b style="font-size:1.25rem">' +
+        esc(weaknesses.length ? weaknesses.join(' · ') : t('q.none')) + '</b></div>' +
+    '</div>' +
+
+    '<h2 style="margin-top:40px">' + esc(t('p.incorrect')) + '</h2>' +
+    (res.wrong.length
+      ? '<div class="stack" style="margin-top:18px">' + res.wrong.map(function (w) {
+          return '<div class="wrong-item">' +
+            '<div class="qtype">' + esc(w.item.level) + ' · ' + esc(tx(SKILLS[w.item.skill])) + ' · ' + esc(t(TYPEKEY[w.item.type])) + '</div>' +
+            '<h4 style="margin-top:8px">' + esc(tx(w.item.q)) + '</h4>' +
+            '<div class="row"><b>' + esc(t('q.yourAnswer')) + ':</b> ' + esc(givenText(w)) + '</div>' +
+            '<div class="row"><b>' + esc(t('q.correctAnswer')) + ':</b> ' + esc(correctText(w.item)) + '</div>' +
+            '<div class="sol"><b>' + esc(t('q.solution')) + ':</b> ' + esc(tx(w.item.sol)) + '</div>' +
+          '</div>';
+        }).join('') + '</div>'
+      : '<div class="notice">' + esc(t('p.allCorrect')) + '</div>') +
+
+    '<h2 style="margin-top:40px">' + esc(t('p.advice')) + '</h2>' +
+    '<ul class="stack" style="margin-top:18px">' + advice.map(function (a) { return '<li class="notice">' + esc(a) + '</li>'; }).join('') + '</ul>' +
+
+    '<h2 style="margin-top:40px">' + esc(t('q.recCourses')) + '</h2>' +
+    '<div class="stack" style="margin-top:18px">' + [F.courseById(recCourse)].concat(extra ? [F.courseById(extra)] : []).map(function (c) {
+      return '<div class="wrong-item ok" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center">' +
+        '<div style="flex:1;min-width:200px"><div class="qtype">' + esc(F.tx(c.level)) + '</div><h4 style="margin-top:6px">' + esc(F.tx(c.name)) + '</h4></div>' +
+        '<a class="btn btn-yellow btn-sm" href="#/register/' + c.id + '">' + esc(t('c.register')) + '</a>' +
+        '<a class="btn btn-ghost btn-sm" href="#/course/' + c.id + '">' + esc(t('c.details')) + '</a></div>';
+    }).join('') + '</div>' +
+
+    '<div class="panel" style="margin-top:34px;background:var(--paper-warm)">' +
+      '<h3>' + esc(t('p.waReport')) + '</h3>' +
+      '<p class="sub" style="margin-top:12px">' + esc(t('p.waHint')) + '</p>' +
+      '<div style="margin-top:20px;display:flex;flex-wrap:wrap;gap:12px">' +
+        '<a class="btn btn-navy" href="' + waURL + '" target="_blank" rel="noopener">' + esc(t('p.waReport')) + '</a>' +
+        '<a class="btn btn-yellow" href="#/register/' + recCourse + '">' + esc(t('c.register')) + '</a>' +
+        '<a class="btn btn-ghost" href="#hero">' + esc(t('q.backHome')) + '</a>' +
+      '</div>' +
+    '</div></div>';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+function state_txt(a) { return a[F.state.lang === 'ar' ? 1 : 0]; }
+function givenText(w) {
+  if (w.item.type === 'a') return String(w.given || '').split('|').join(' ').trim() || '—';
+  if (w.item.type === 'k') {
+    var arr = String(w.given || '').split(',');
+    var segs = w.item.opts.split(';');
+    return segs.map(function (seg, j) {
+      var left = seg.split('>')[0].split('||')[0];
+      var pick = arr[j];
+      var right = (pick === '' || pick == null || isNaN(Number(pick)))
+        ? '—'
+        : segs[Number(pick)].split('>')[1].split('||')[0];
+      return left + ' → ' + right;
+    }).join(' · ');
+  }
+  return String(w.given == null || w.given === '' ? '—' : w.given);
+}
+function correctText(item) {
+  if (item.type === 'm' || item.type === 'e') return P(item.opts)[Number(item.ans)][0];
+  if (item.type === 'f' || item.type === 's' || item.type === 'l') return String(item.ans).split(';')[0];
+  if (item.type === 'a') return P(item.opts).map(function (p) { return p[0]; }).join(' ');
+  if (item.type === 'k') {
+    return item.opts.split(';').map(function (seg) {
+      var h = seg.split('>');
+      return h[0].split('||')[0] + ' → ' + h[1].split('||')[0];
+    }).join(' · ');
+  }
+  return String(item.ans).split(';').join(', ');
+}
+
+window.viewPlacementHome = viewPlacementHome;
+window.initPlacementHome = initPlacementHome;
+window.viewPlacementTest = viewPlacementTest;
+window.initPlacementTest = initPlacementTest;
+window.viewPlacementResults = viewPlacementResults;
+window.initPlacementResults = initPlacementResults;
+})();
+</script>
+<!--APP-->
+</body>
+</html>
